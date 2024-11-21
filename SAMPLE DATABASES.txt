@@ -1,0 +1,36 @@
+SAMPLE DATABASES
+
+ 
+     get sample db from 
+
+       - https://dev.mysql.com/doc/index-other.html
+
+       - In normal cmd if your  MySQL command is not working that mean class path is not set
+
+       - C:\Program Files\MySQL\MySQL Server 8.0\bin
+       
+       - go to above path copy it  & set in env variable
+
+
+
+ AFTER IMPORTING DATA CHECK FOR RELATION BETWEEN TABLES 
+
+
+       - GO TO WORKBENCH , REFRESH IT
+       - GO TO DATABASES AT TOP LEFT 
+       - CLICK ON REVERSE ENGINEERING
+       - THEN CLICK ON NEXT , ENTER PASSWD
+       - CLICK NEXT CHOOSE DB 
+       - CLICK NEXT , EXECUTE IT & FINISH
+       - NOW U CAN SEE RELATION BETWEEN TABLES 
+
+
+
+IF WANT TO KNOW HOW THAT TABLES MADE 
+
+       - CLICK ON THAT TABLE & CLICK ON INFO ICON AT RIGHT OF THE NAME CLICK ON DDL TO GET THE CODE OF THAT TABLE.
+
+
+TO CHECK HOW  ANY COLUMN CONNECTED WITH ONE ANOTHER TABLE 
+
+       - CLICK ON THAT TABLE DATA & IT WILL  SHOW U REALTION THROUGH COLOR IN ERR DIAGRAM 

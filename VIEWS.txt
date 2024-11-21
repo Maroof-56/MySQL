@@ -1,0 +1,48 @@
+    VIEWS
+
+
+      
+      MySQL supports view include updatable table views.
+      Views are stored queries that when invoked produce a result set.
+      View acts as a virtual table.
+
+
+      EX:
+    ( BELOW WHAT I HAVE SIMPLY DONE IS I STORE JOIN QUERY COMMAND IN VIEW TABLE & CAN USE MANY FUNCTION WITHM THIS VIEW)
+
+    ( I had created an view named institute_info in which i set tea_name,cour_name,fees as you can below on query , now what it does is it store all this info and acts as virtual table.
+    
+      Now using this view we dont want to write query again & again & also we can use it however we want 
+   
+      Note : Put important column while creating views so that u can use u like that u want ).
+
+      mysql> CREATE VIEW institute_info AS
+    -> select tea_name , cour_name , fees from teacher_table
+    -> JOIN teacher_course ON teacher_course.teacher_id=teacher_table.tea_id
+    -> JOIN courses_table ON courses_table.cour_id=teacher_course.course_id;
+Query OK, 0 rows affected (0.03 sec)
+
+
+
+mysql> select * from institute_info;
++------------+---------------+--------+
+| tea_name   | cour_name     | fees   |
++------------+---------------+--------+
+| Ashfaq S   | Data science  | 100000 |
+| Zainab M   | AWS           | 120000 |
+| Zainab M   | Python        |  45000 |
+| Shabina Sa | Soft Testing  |  76000 |
+| Shabana S  | Software Engg |  65000 |
+| Vikas B    | Blockchain    |  80000 |
+| Farida A   | Web Dev       |  60000 |
++------------+---------------+--------+
+
+
+
+mysql> select * from institute_info where tea_name='Zainab M';
++----------+-----------+--------+
+| tea_name | cour_name | fees   |
++----------+-----------+--------+
+| Zainab M | AWS       | 120000 |
+| Zainab M | Python    |  45000 |
++----------+-----------+--------+

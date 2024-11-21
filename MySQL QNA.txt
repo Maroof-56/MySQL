@@ -1,0 +1,291 @@
+ MySQL QNA
+
+ 
+      Interview questions 
+
+      
+      1. What is MySQL 
+           MySQL is an open source relational dababase management system (RDBMS) that uses strctures query language (SQL) to manage,manipulate & retrieve data.
+
+      2. Diff between SQL & MySQL
+           SQL is an standard language for accessing & manipulating databases.Whereas
+           MySQL is an RDMS that uses SQL to manage operations.
+
+      3. What is the purpose of my.cnf configuration file in MySQL or ( my.ini file in windows)
+          The my.cnf or my.ini file is the primary  configuration file for MySQL servers.
+          It is used to configure many setting including port number,memory location,memory allocation & more.
+          - the file  often present in C:programfile/mysql/mysql server
+
+
+      4. What is table & field in MySQL 
+          A table is collection of related data in DB,organized into rows & columns.
+          Each column represents a files while each row represent a record.
+
+      5. Default port for MySQL server ?
+          Is 3306 , although we can change it in configuration file
+
+      6. To see existing database ?
+          show databases;
+
+      7. Select a database to work with ?
+          use db_name;
+
+      8. To see all table  in database ?
+          show tables;
+
+      9.To see a structure or detail of a table  ?
+          desc table_name;     (desc - describe )
+
+      10.Primary key in mqsql ?
+          PK is a unique identifier for each record in table, it contains unique value but can't contain NULL VALUES 	 	 	
+
+      11. How do you create table named 'employees' with an column name 'emp_id' as primary key
+          create table employees(
+               emp_id int primary key auto_increment        ( auto_increment is optional)
+              )
+
+      12. What is foreign key & why it is important ?
+           A foreign key is a column (or a set of columns) in a database table that creates a link between data in two tables.
+           IMPORTANCE : Data Integrity, Foreign keys ensure that the relationships between tables remain consistent, which helps maintain the accuracy and reliability of the data.
+          Ex: Suppose we have  2 tables 1.Customers 2.orders both have it id's , so in this case we reference cutomers id  in orders so that we get to know which order is made by which customer. Here the customers id in orders table acts as FOREIGN KEY which is PRIMARY KEY in its table.
+
+     13. What is constraint in MySQL ?
+         A constraint is rule applied to a column or set of column in MySQL to restrict the data that can be stored in columns.
+         Ex : Primary key - is kind of constraint that not allow data to be same , default - that set default entries while  inserting, unique & so on...
+          
+
+     14. What are the datatype in MySQL?
+         A datatype defines the type of data that a field (or column) in a database can store.
+         Ex : Age should be number & name should be string 
+
+     15. Diff between CHAR & VARCHAR ?
+         CHAR is fixed length datatype used for strings.
+         It always reserved the specified amount of space in db even if u haven't enter the specified length of data.
+
+         VARCHAR is a variable-length datatype, that only uses as much as space is needed 
+
+         Ex : CHAR(4) - insert ('AB') , stored as ('AB  ')   This will take full specified length even is empty
+              VARCHAR(4) - insert ('AB') , stored as ('AB')  This will take only 2 space
+
+     16. What datatype you use for a column to store product prices ?
+         Decimal or Float.
+
+     17 How to find total no. of records in table ?
+         Using COUNT function 
+         Ex : select COUNT(emp_id) from table_name;
+
+     18. How to see top 3 records ?
+         Using LIMIT function , we can se any length of data we want to see.
+
+     19. How we can format the date & time like 21st tue at 21:00:23 ?
+         Using DATE_FORMAT Function
+
+         Ex : select DATE_FORMAT(now(),'%D at %T');  ( D - add suffix after date & T - gives full time stamp )
+
+     20.What is CASE in MySQL ?
+        In MySQL, CASE is a conditional expression that allows you to return a value based on certain conditions
+        It is used to create conditional query.
+
+        Ex :  select 
+                   name,
+               CASE 
+                   when age < 18 then 'minor'
+                   when age between 18 and 60 then 'adult'
+                   else 'senior'
+               END as age_grp
+              from people;
+
+     21. What is the use of CHECK Constraint ?
+         To limit the value that can be placed in column.
+
+         Ex : create table contact(
+                           name varchar(20),
+                           mob varchar(15) UNIQUE CHECK(length(mob) >= 10
+                           )
+
+     22. Types of Relationship in MySQL ?
+          
+         One to one    ( show the detail in another table only once )
+         One to many   ( Many times , like one emp can perform multiple task , & shows multiple time in task table )
+         Many to many  ( One book can have multiple authors & one authors can have multiple books)
+
+    23. What are the stored routine in MySQL ?
+        An sql statement or a set of sql statement that can be stored on database server which can be call no. of  times.
+        ( means jo repetitive query  day to day repeat hoti h to usko ek block of code me stored kr k run kre jisse hame barr barr query type nhi krni padegi).
+
+        Types 
+
+       - Stored procedure
+       - User defined functions
+
+    24. How can u backup MySQL database ?
+        A MySQL database can be backed up using the command-line-utility .
+        which create a dump file of database that can be used to restore database if needed
+
+        syntax 
+            
+        - mysqldump -u username -p database_name > backupfile.sql
+
+    25. How to import a data in MySQL from text file ? 
+        Through mysqlimport utility
+
+    26. What is JOIN in MySQL ?
+        In MySQL, a join is a way to combine rows from two or more tables based on a related column between them.
+
+    27. Types of JOIN 
+
+        INNER JOIN returns rows with matching values in both tables.
+
+        LEFT JOIN returns all rows from the left table, with matching rows from the right table (or NULL if no match).
+
+        RIGHT JOIN returns all rows from the right table, with matching rows from the left table (or NULL if no match).
+
+        FULL OUTER JOIN is not directly supported in MySQL but can be simulated using LEFT JOIN and RIGHT JOIN.
+
+        CROSS JOIN returns all combinations of rows from both tables.
+
+
+    28. What is INDEX in MySQL ?
+        An index is used to speed up the search /query process withi a table.
+
+    29. How do you add an index in the table ?
+        CREATE INDEX index_name
+        ON table_name(column_name);     ( mostly on column id ).
+
+    30. What is NULL values ?
+        It represent missing or unknown value.
+
+    31. How do you select only unique values from a table?
+        Using DISTINCT.
+
+        Ex: select distinct column_name from table_name;
+
+    32. How do you sort column data in table ?
+        Use ORDER BY ;
+
+    33. How do you update the email address of a customer int the 'customers' table with id=5
+        UPDATE customers SET email='newemail' where id=5;
+
+    34. What is Normalization ?
+        Is the process of organizing data in a database to reduce redundancy and improve data integrity.
+         It involves dividing large tables into smaller, related tables and defining relationships between them.
+         This helps to eliminate duplication of data, ensures consistency, and enhances performance for queries and updates.
+
+  
+    35. What is VIEW in MySQL ?
+        A view in MySQL is a virtual table that is created based on the result set of a query.
+        It doesn't store data physically but provides a way to represent data from one or more tables in a structured manner, often simplifying complex queries.
+        
+
+    36. What is stored procedure ?
+        Stored procedure are a set of  SQL statement that can be stored in the server.
+        Since the SQL code is precompiled and stored in the database, it can be executed more quickly compared to sending multiple SQL queries from an application.
+
+        Ex : Created a store procedure of updatebookstock to update stock.
+
+    37. What is trigger in MySQL ?
+        A trigger in MySQL is a database object that automatically executes a predefined action (usually SQL statements) in response to specific events on a table, such as an INSERT, UPDATE, or DELETE. 
+        Trigger are primarily used to automate the process within the database.
+
+    38. Explain GROUP BY Clause ?
+        Group By aggregate data by one or more columns.
+        It is often used with aggregate functions like COUNT(), SUM(), AVG(), MAX(), MIN(), etc., to perform calculations on each group of rows.
+
+        Ex : select dept , count(name) from employees GROUP BY dept;
+
+    39. What is a Subquery?
+        A subquery(also called an inner query or nested query) is a query embedded within another query.
+        
+        Ex : select name, salary from employees
+               where salary > ( select AVG(salary) from employees );.
+
+    40. what are the user defined function?
+        They are created by users to perform specific  task.
+
+        Ex : 
+            DELIMITER //
+             
+              CREATE FUNCTION CalculateBonus(salary DECIMAL(10,2) )
+              RETURN DECIMAL(10.2)
+              BEGIN
+                   RETURN salary * 0.10;
+              END //
+            DELIMITER //
+
+           select id, name, salary, CalculateBonus(salary) AS 'Bonus' from employees;
+
+    41. What is Deadlock?
+        A deadlock in MySQL (or any database system) occurs when two or more transactions are waiting for each other to release locks, creating a situation where none of the transactions can proceed.
+       
+        Ex :
+        Transaction A locks Table 1 and waits for Table 2 to be unlocked.
+        Transaction B locks Table 2 and waits for Table 1 to be unlocked.
+
+        How MySQL Handles Deadlocks :
+
+        MySQL automatically detects deadlocks and resolves them by rolling back one of the transactions to allow the other to continue. The transaction that is rolled back can be retried.
+
+    42. What is difference between HAVING & WHERE Clause ?
+        WHERE : 
+         Is used to filter records before any grouping.
+         Cannot be used with aggregate functions like COUNT(), SUM(), AVG(), etc.
+
+          Ex 
+            SELECT * 
+            FROM employees
+            WHERE salary > 50000;
+
+        HAVING :
+         Is used to filter records after they are grouped.
+         Can be used with aggregate functions like COUNT(), SUM(), AVG(), etc.
+
+          Ex
+            SELECT department, COUNT(*) AS total_employees
+             FROM employees
+             GROUP BY department
+             HAVING COUNT(*) > 5;
+          (HAVING clause filters the groups (departments) where the number of employees is greater than 5 after the GROUP BY has been executed.).
+
+
+    43. What is HEAP tables ?
+        Heap tables (also called memory tables) in MySQL are tables that are stored entirely in memory (RAM), rather than on disk.
+        Heap tables are in memory tables used for high-speed storage on temporary basis.
+
+        In-memory storage: All data is stored in RAM, providing very fast read and write operations.
+        Temporary data: Data in heap tables is non-persistent, meaning it will be lost if the server crashes or is restarted.
+        
+   
+     44. What is the significant of TIMESTAMP data type ?
+         TIMESTAMP datatype used for values that contain both date & time parts,  automatically updating whenever the row is modified.
+
+     45. What is CONCAT function 
+         CONCAT function s used to concatenates(add) two or more strings into single string.
+         Ex : concatenate first & last name & show as full name.
+
+     46. write sql query to delete a record from orders , order-Id id 01001
+         DELETE from orders  where or_id=01001
+
+     47. write sql command to add new column 'birthdate' to an existing table employees.
+         ALTER table employees add birthdate DATE;
+
+     48. How can  you remove the table 'temporary_data' from database?
+         DROP TABLE temporary_data;
+
+     49. How do you Rename a table in MySQL?
+         RENAME TABLE old_name TO new_name;
+
+     50. What is use of ROLL UP in MySQL ?
+         ROLLUP clause is used an an extension of the GROUP BY CLAUSE.
+         It enables you to create subtotals & grandtotal within your result set.
+
+     51. Delete ,             Drop ,             Truncate 
+
+ 1.  Removes row          Removes a table      Removes all rows
+     from tables          from database/        from tables
+                          data dictionary
+
+ 2.    DML                    DDL                     DDL
+
+ 3.  Can be rolled  back     Can't                    Can't
+
+ 

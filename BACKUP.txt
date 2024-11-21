@@ -1,0 +1,23 @@
+BACKUP
+
+   
+        ______                  ______
+        |    |                  |    |
+        |    |                  |    |  
+
+       server-A                server-B
+            
+       How to transfer data between these 2 servers.
+
+
+       Backup
+  
+         mysqldump -u root -p mydb > mydb_backup.sql     ( this will create backup file)
+
+       
+       Import 
+
+         MySQL -u root -p mydb < mydb_backup.sql          ( this import bankcup file to mydb)
+
+
+        mydb name one database should be present on destination , if not create & then import.

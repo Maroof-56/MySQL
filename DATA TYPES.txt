@@ -1,0 +1,410 @@
+DATA TYPES
+
+
+   The char & varchar types are similar , but differ in the way they are stored and retrieved.
+
+
+  Varchar(50)
+     The length can be specified as a value from 0 to 65,535
+
+  
+  CHAR
+     It is a fixed length
+
+     Char(5)  - > Only 5 character allowed 
+
+     The length can be any value from 0 to 255
+
+     When CHAR values are stored , they  are right-padded with spaces to specified length.
+     ( Suppose u declare char len of 3 , so when u stored it MySQL automatically  add 2 white space to match length.this is y called fixed length)
+     ( Then it is a waste of memory & space ).
+     ( Ex: char(40) - insert value 'AB', MySQL store value as 'AB  '.)
+
+     For fixed length of value  if required better to use char
+       ( Ex : like coutry code : US , IN , AU )
+
+  value      |  CHAR(4)  Storage Required |  VARCHAR(4)  Storage Required
+             |                            |
+   'ab'      |   'ab  '      4 bytes      |     'ab'           3 bytes
+   'abcd'    |   'abcd'      4 bytes      |     'abcd'         5 bytes
+   'abcdefgh'|   'abcd'      4 bytes      |     'abcd'         5 bytes
+             |                            |
+
+
+  DECIMAL
+
+      The maximum number of digit for Decimal is 65
+       Ex: Decimal(5,2) - 5-total digit , 2-Digits after decimal
+
+
+      mysql> create table num(price decimal(5,2));   ( created)
+
+      mysql> insert into num  values(345.22);        (values insert )
+
++--------+
+| price  |
++--------+
+| 345.22 |
++--------+
+
+      mysql> insert into num  values(345.227);       ( insert 3 value after decimal).
+      
++--------+
+| price  |     ( Here It takes 2 value after decimal only as it assign)
++--------+     ( It  round figured the value & consider 2 value )
+| 345.22 |
+| 345.23 |
++--------+
+
+      mysql> insert into num  values(345897.227);
+ERROR 1264 (22003): Out of range value for column 'price' at row 1
+
+
+
+  FLOAT & DOUBLE
+
+
+    Float   - upto ~7 digits , takes 4 bytes of memory
+    Double  - upto ~15 digits, takes 8 bytes of memory
+    If accuracy is not too imp or if speed is the highest priority Double type may good enough.
+
+      mysql> insert into num1
+    -> values (123.456 , 123.456);
+
+
+      mysql> select * from num1;
++---------+---------+
+| fl      | do      |
++---------+---------+      ( Work fine no diff in small value)
+| 123.456 | 123.456 |
++---------+---------+
+
+      mysql> insert into num1
+    -> values (123.45678910 , 123.45678910);
+
+
+      mysql> select * from num1;
++---------+-------------+
+| fl      | do          |
++---------+-------------+  ( Here u will see the diff as fl only take 3 val)
+| 123.456 |     123.456 |
+| 123.457 | 123.4567891 |  ( Both will not go beyond its range )
++---------+-------------+
+
+______________________________________________________________________________________________________________________________________________
+
+  DATE TIME DATETIME   (yyyy-mm-dd hh:mm:ss)
+
+      
+    Syntax :
+
+      create table person(
+    -> joinD Date,
+    -> joinT Time,
+    -> joinDT Datetime
+    -> );
+
+
+    mysql> insert into person
+    -> values ( '2022-04-17' , '23:00:00' , ' 2023-05-16 22:05:01');
+
+    
+    mysql> select * from person;
++------------+----------+---------------------+
+| joinD      | joinT    | joinDT              |
++------------+----------+---------------------+
+| 2022-04-17 | 23:00:00 | 2023-05-16 22:05:01 |
++------------+----------+---------------------+
+
+
+
+     Function 
+
+      CURDATE  CURTIME  NOW 
+
+
+       Curdate()  - yyyy-mm-dd    ( Current date )
+       Curtime()  - hh:mm:ss
+       Now()      - yyyy-mm-dd hh:mm:ss
+
+       select curdate - to show current date & so on 
+ 
+    
+       mysql> insert into person values(curdate(),curtime(),now() );
+Query OK, 1 row affected (0.01 sec)
+
++------------+----------+---------------------+
+| joinD      | joinT    | joinDT              |
++------------+----------+---------------------+
+| 2022-04-17 | 23:00:00 | 2023-05-16 22:05:01 |
+| 2024-10-27 | 18:26:43 | 2024-10-27 18:26:43 |
++------------+----------+---------------------+
+
+   DAYNAME DAYOFMONTH DAYOFWEEK
+
+
+     DAYNAME
+
+        mysql> select dayname('2024-10-27');
++-----------------------+
+| dayname('2024-10-27') |
++-----------------------+
+| Sunday                |
++-----------------------+
+
+        mysql> select dayname(curdate());
++--------------------+
+| dayname(curdate()) |
++--------------------+
+| Sunday             |
++--------------------+
+
+     DAYOFMONTH
+
+        mysql> select dayofmonth(curdate());
++-----------------------+
+| dayofmonth(curdate()) |
++-----------------------+
+|                    27 |
++-----------------------+
+
+
+     DAYOFWEEK
+  
+       mysql> select dayofweek(curdate());
++----------------------+
+| dayofweek(curdate()) |
++----------------------+
+|                    1 |
++----------------------+
+
+
+     MONTHNAME
+
+       mysql> select monthname(curdate());
+
++----------------------+
+| monthname(curdate()) |
++----------------------+
+| October              |
++----------------------+
+
+
+     ALSO IT CAN USE IN TABLE 
+
+       mysql> select joinD , monthname(joinD) from person;
+
++------------+------------------+
+| joinD      | monthname(joinD) |
++------------+------------------+
+| 2022-04-17 | April            |      Months
+| 2024-10-27 | October          |
++------------+------------------+
+
+       mysql> select joinD , year(joinD) from person;
+
++------------+-------------+
+| joinD      | year(joinD) |
++------------+-------------+
+| 2022-04-17 |        2022 |           year
+| 2024-10-27 |        2024 |
++------------+-------------+
+
+
+       mysql> select joinT , hour(joinT) from person;
+
++----------+-------------+
+| joinT    | hour(joinT) |
++----------+-------------+            Hours  & minutes 
+| 23:00:00 |          23 |
+| 18:26:43 |          18 |
++----------+-------------+
+
+
+     48 vdeo
+
+
+ DATE FORMATTING 
+       ( Know more in mysql official documentation of Date format )
+
+
+     mysql>  select date_format(now(),'%d,%m,%y');
+
++-------------------------------+
+| date_format(now(),'%d,%m,%y') |
++-------------------------------+
+| 29,10,24                      |
++-------------------------------+
+   
+    mysql>  select date_format(now(),'%D %a ');
+
++-----------------------------+
+| date_format(now(),'%D %a ') |   ( D add suffix to date , a - is week) 
++-----------------------------+
+| 29th Tue                    |
++-----------------------------+
+
+ 
+    mysql>  select date_format(now(),'%D %a at %k');
+
++----------------------------------+
+| date_format(now(),'%D %a at %k') |  ( k gives time )
++----------------------------------+
+| 29th Tue at 13                   |
++----------------------------------+
+
+    
+    Use with table
+
+
+     mysql> select joinDt, date_format(joinDT,'%D %a at %k') from person;
+
++---------------------+-----------------------------------+
+| joinDt              | date_format(joinDT,'%D %a at %k') |
++---------------------+-----------------------------------+
+| 2023-05-16 22:05:01 | 16th Tue at 22                    |
+| 2024-10-27 18:26:43 | 27th Sun at 18                    |
++---------------------+-----------------------------------+
+
+
+
+ MATH USING DATE ADD & SUB FUNCTION
+
+
+
+  DATEDIFF
+
+     mysql> select datediff( '2024-02-22' , '2024-02-07');
+
++----------------------------------------+
+| datediff( '2024-02-22' , '2024-02-07') |    ( Date Difference )
++----------------------------------------+
+|                                     15 |
++----------------------------------------+
+
+
+  TIMEDIFF
+
+     mysql> select timediff('23:10:00' , '20:10:00');
+
++-----------------------------------+
+| timediff('23:10:00' , '20:10:00') |
++-----------------------------------+
+| 03:00:00                          |
++-----------------------------------+
+
+     
+  DATE_ADD
+
+     mysql> select date_add( now() , interval 1 year);
+
++------------------------------------+
+| date_add( now() , interval 1 year) |
++------------------------------------+   ( Date add (to know todays date after 1 yr) )
+| 2025-10-29 14:03:43                |
++------------------------------------+
+
+     mysql> select date_add( '2024-10-29' , interval 1 month);
+
++--------------------------------------------+
+| date_add( '2024-10-29' , interval 1 month) | ( month )
++--------------------------------------------+
+| 2024-11-29                                 |
++--------------------------------------------+
+
+
+     mysql> select date_add( '2024-10-29' , interval 10 day);
+
++-------------------------------------------+
+| date_add( '2024-10-29' , interval 10 day) |
++-------------------------------------------+
+| 2024-11-08                                |
++-------------------------------------------+
+
+
+   DATE_SUB 
+
+
+    mysql> select date_sub( '2024-10-29' , interval 10 day);
+
++-------------------------------------------+
+| date_sub( '2024-10-29' , interval 10 day) |   ( Similar for all )
++-------------------------------------------+ 
+| 2024-10-19                                |
++-------------------------------------------+
+
+
+
+ DEFAULT & ON UPDATE TIMESTAMP 
+
+
+    mysql> create table blogs(
+    -> blog varchar(60),
+    -> ct datetime default current_timestamp,
+    -> ut datetime on update current_timestamp
+    -> );
+
++-------+-------------+------+-----+-------------------+-----------------------------+
+| Field | Type        | Null | Key | Default           | Extra                       |
++-------+-------------+------+-----+-------------------+-----------------------------+
+| blog  | varchar(60) | YES  |     | NULL              |                             |
+| ct    | datetime    | YES  |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED           |
+| ut    | datetime    | YES  |     | NULL              | on update CURRENT_TIMESTAMP |
++-------+-------------+------+-----+-------------------+-----------------------------+
+   
+   
+    mysql> insert into blogs(blog)
+    -> values ('This is my first blog');
+
+mysql> select * from blogs;
++-----------------------+---------------------+------+
+| blog                  | ct                  | ut   |
++-----------------------+---------------------+------+ ( Current is fill updated is null )
+| This is my first blog | 2024-10-29 14:45:55 | NULL |
++-----------------------+---------------------+------+
+     
+   
+    mysql> update blogs
+    -> set blog='This is blog from home';
+
+
+mysql> select * from blogs;
++------------------------+---------------------+---------------------+
+| blog                   | ct                  | ut                  |
++------------------------+---------------------+---------------------+ ( Diff betwn curr & upd time of blog)
+| This is blog from home | 2024-10-29 14:45:55 | 2024-10-29 14:48:28 |
++------------------------+---------------------+---------------------+
+
+
+
+
+________________________________________________________________________________________________________________________________________________
+
+
+ EXERCISE - 6 
+
+
+    mysql>  select date_format( now(),'%d:%m:%y');
+
++--------------------------------+
+| date_format( now(),'%d:%m:%y') |
++--------------------------------+
+| 29:10:24                       |
++--------------------------------+
+
+   mysql>  select date_format( now(),'%d:%m:%Y');
+
++--------------------------------+
+| date_format( now(),'%d:%m:%Y') |   ( Y - to get yyyy)
++--------------------------------+
+| 29:10:2024                     |
++--------------------------------+
+
+
+   mysql>  select date_format( now(),'%M %D at %T');
+
++-----------------------------------+
+| date_format( now(),'%M %D at %T') |   ( T - Time in all format ).
++-----------------------------------+
+| October 29th at 15:11:44          |
++-----------------------------------+

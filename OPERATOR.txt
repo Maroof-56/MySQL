@@ -1,0 +1,227 @@
+ OPERATOR
+
+  
+    Relational operator.
+    Logical operator.
+    
+
+
+  IN & OUT KEYWORD 
+
+     Ex to understand 
+       - select * from employee
+            where dept='Account'
+               or dept='c
+ash'
+               or dept='Loan'
+         Where time it  need to specify for specific dept to overcome this issue use IN keyword.
+
+       - select * from employees
+            where dept IN ('Account','Cash','Loan').
+
+
+     mysql> select * from employees
+    -> where dept in ('Loan','IT','Account');
+
++--------+--------+------------+---------+--------+
+| emp_id | name   | design     | dept    | salary |
++--------+--------+------------+---------+--------+
+|    101 | Raju   | Manager    | Loan    |  45000 |
+|    103 | Paul   | Associate  | IT      |  40000 |
+|    104 | Alex   | Accountant | Account |  30000 |
+|    106 | Maroof | CEO        | IT      |  80000 |
++--------+--------+------------+---------+--------+
+
+
+    mysql> select * from employees
+    -> where dept not in('Loan','IT','Account');
+
++--------+--------+-----------+----------+--------+
+| emp_id | name   | design    | dept     | salary |
++--------+--------+-----------+----------+--------+
+|    105 | Victor | Associate | Deposite |  25000 |
++--------+--------+-----------+----------+--------+
+
+
+  BETWEEN 
+
+   
+      >= & <=  instead of this use between 
+
+ 
+
+      mysql> select * from employees
+    -> where salary >= 30000 and salary <= 80000;
+
++--------+--------+------------+---------+--------+
+| emp_id | name   | design     | dept    | salary |
++--------+--------+------------+---------+--------+
+|    101 | Raju   | Manager    | Loan    |  45000 |
+|    103 | Paul   | Associate  | IT      |  40000 |
+|    104 | Alex   | Accountant | Account |  30000 |
+|    106 | Maroof | CEO        | IT      |  80000 |
++--------+--------+------------+---------+--------+
+
+
+     mysql> select * from employees
+    -> where salary between 30000 and 80000;
+
++--------+--------+------------+---------+--------+
+| emp_id | name   | design     | dept    | salary |
++--------+--------+------------+---------+--------+
+|    101 | Raju   | Manager    | Loan    |  45000 |
+|    103 | Paul   | Associate  | IT      |  40000 |
+|    104 | Alex   | Accountant | Account |  30000 |
+|    106 | Maroof | CEO        | IT      |  80000 |
++--------+--------+------------+---------+--------+
+     
+
+
+
+  CASE 
+
+     
+
+     mysql> SELECT
+    ->     name,
+    ->     salary,
+    ->     CASE
+    ->         WHEN salary >= 40000 THEN 'High salary'
+    ->         ELSE 'Low salary'
+    ->     END AS 'salary category'
+    -> FROM employees;
+
++--------+--------+-----------------+
+| name   | salary | salary category |
++--------+--------+-----------------+
+| Raju   |  45000 | High salary     |
+| Paul   |  40000 | High salary     |
+| Alex   |  30000 | Low salary      |
+| Victor |  25000 | Low salary      |
+| Maroof |  80000 | High salary     |
++--------+--------+-----------------+
+
+
+     mysql> select         ( Can Also add multiple condition )
+    ->    name,salary,
+    ->    case
+    ->    when salary > 45000 then 'High salary'
+    ->    when salary >= 30000 and salary < 40000 then 'Mid  salary'
+    ->    else   'Low salary'
+    ->    end as 'salary  category'   ( It create one column & end there)
+    ->    from employees;
+
++--------+--------+------------------+
+| name   | salary | salary  category |
++--------+--------+------------------+
+| Raju   |  45000 | Low salary       |
+| Paul   |  40000 | Low salary       |
+| Alex   |  30000 | Mid  salary      |
+| Victor |  25000 | Low salary       |
+| Maroof |  80000 | High salary      |
++--------+--------+------------------+
+
+
+  IS NULL & NOT LIKE KEYWORD 
+
+
+      IS NULL.
+
+     mysql> select * from employees ( It will show null if available in table).
+    -> where salary is null;
+
+Empty set (0.00 sec)
+
+
+      LIKE 
+
+
+       mysql> select * from employees   ( Give name that start with A)
+    -> where name like 'A%';
+
++--------+------+------------+---------+--------+
+| emp_id | name | design     | dept    | salary |
++--------+------+------------+---------+--------+
+|    104 | Alex | Accountant | Account |  30000 |
++--------+------+------------+---------+--------+
+      
+
+       mysql> select * from employees ( Give name that not start with A)
+    -> where name not like 'A%';
+
++--------+--------+-----------+----------+--------+
+| emp_id | name   | design    | dept     | salary |
++--------+--------+-----------+----------+--------+
+|    101 | Raju   | Manager   | Loan     |  45000 |
+|    103 | Paul   | Associate | IT       |  40000 |
+|    105 | Victor | Associate | Deposite |  25000 |
+|    106 | Maroof | CEO       | IT       |  80000 |
++--------+--------+-----------+----------+--------+
+
+
+____________________________________________________________________________________________________________
+
+  EXERCISE - 7 
+
+     
+   mysql> select * from employees
+    -> where salary between 25000 and 60000;
+
++--------+--------+------------+----------+--------+
+| emp_id | name   | design     | dept     | salary |
++--------+--------+------------+----------+--------+
+|    101 | Raju   | Manager    | Loan     |  45000 |
+|    103 | Paul   | Associate  | IT       |  40000 |
+|    104 | Alex   | Accountant | Account  |  30000 |
+|    105 | Victor | Associate  | Deposite |  25000 |
++--------+--------+------------+----------+--------+
+
+
+ mysql> select * from employees  ( Whose name start with R or M )
+    -> where name like 'R%' or name like 'M%';
++--------+--------+---------+------+--------+
+| emp_id | name   | design  | dept | salary |
++--------+--------+---------+------+--------+
+|    101 | Raju   | Manager | Loan |  45000 |
+|    106 | Maroof | CEO     | IT   |  80000 |
++--------+--------+---------+------+--------+
+
+
+
+   mysql> select * from employees   ( Find that salary=8000 & dept=IT)
+    -> where salary=80000 and dept='IT';
++--------+--------+--------+------+--------+
+| emp_id | name   | design | dept | salary |
++--------+--------+--------+------+--------+
+|    106 | Maroof | CEO    | IT   |  80000 |
++--------+--------+--------+------+--------+
+
+
+
+   mysql> select * from employees
+    -> where dept in('Loan','Account');
++--------+------+------------+---------+--------+
+| emp_id | name | design     | dept    | salary |
++--------+------+------------+---------+--------+
+|    101 | Raju | Manager    | Loan    |  45000 |
+|    104 | Alex | Accountant | Account |  30000 |
++--------+------+------------+---------+--------+
+
+
+
+   mysql> select
+    ->   name,salary,
+    ->   case
+    ->   when salary != 0 then salary/80
+    ->   end as 'Salary in dollar'
+    ->   from employees;
+
++--------+--------+------------------+
+| name   | salary | Salary in dollar |
++--------+--------+------------------+
+| Raju   |  45000 |         562.5000 |
+| Paul   |  40000 |         500.0000 |
+| Alex   |  30000 |         375.0000 |
+| Victor |  25000 |         312.5000 |
+| Maroof |  80000 |        1000.0000 |
++--------+--------+------------------+

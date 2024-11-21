@@ -1,0 +1,139 @@
+WINDOW FUNCTIONS
+
+
+   Introduced in windows version 8.O
+
+
+     Window function also known as analytic function allows you to perform calculation across a set of rows related to current row.
+
+     Defined by OVER() Clause.
+
+ TRY ON WORKBENCH
+
+    select 
+  emp_id, 
+  name,
+  SUM(salary) OVER() as sum_salary
+  from employees;
+
+
+
+   select 
+  emp_id, 
+  dept,
+  salary,
+  SUM(salary) OVER(order by emp_id) as sum_salary
+  from employees;
+
+
+101	Loan	45000	45000   ( you can see how it adds in 2nd row sal+ 1tCol= 2 col sal) 
+103	IT	40000	85000
+104	Account	30000	115000
+105	Deposite25000	140000
+106	IT	80000	220000
+
+
+   select 
+  emp_id, 
+  dept,
+  salary,
+  SUM(salary) OVER(partition by dept) as sum_salary
+  from employees;
+
+id      dept     salary  sum_salary
+104	Account	30000	30000
+105	Deposite25000	25000
+103	IT	40000	120000
+106	IT	80000	120000
+101	Loan	45000	45000
+
+
+
+   select 
+  emp_id, 
+  dept,
+  salary,
+  MAX(salary) OVER(partition by dept) as max_salary
+  from employees;
+
+
+104	Account	30000	30000
+105	Deposite25000	25000
+103	IT	40000	80000
+106	IT	80000	80000
+101	Loan	45000	45000
+
+
+  select 
+ ROW_NUMBER() OVER() as No,
+  emp_id, 
+  dept,
+  salary
+  from employees;
+
+1	101	Loan	45000
+2	103	IT	40000
+3	104	Account	30000
+4	105	Deposite25000
+5	106	IT	80000
+
+
+  select 
+ ROW_NUMBER() OVER(order by salary) as No,
+  emp_id, 
+  dept,
+  salary
+  from employees;
+
+1	105	Deposite25000
+2	104	Account	30000
+3	103	IT	40000
+4	101	Loan	45000
+5	106	IT	80000
+
+
+ select 
+ ROW_NUMBER() OVER(partition by dept) as No,
+  emp_id, 
+  dept,
+  salary
+  from employees;
+                           ( Kitne dept me kitne number hai )
+1	104	Account	30000
+1	105	Deposite25000
+1	103	IT	40000
+2	106	IT	80000
+1	101	Loan	45000
+
+
+ select 
+  emp_id, 
+  dept,
+  salary,
+  RANK() OVER(order by salary desc) as sal_rank
+  from employees;
+
+                      rank
+106	IT	80000	1
+101	Loan	45000	2
+103	IT	40000	3
+104	Account	30000	4
+105	Deposite25000	5
+
+
+
+ (This will rank properly even if have same name but according	 to sal )
+ select 
+  emp_id, 
+  dept,
+  salary,
+  DENSE_RANK() OVER(order by salary desc) as sal_rank
+  from employees;
+
+106	IT	80000	1
+101	Loan	45000	2
+103	IT	40000	3
+104	Account	30000	4
+105	Deposite25000	5
+
+ function called LAG & LEAD 

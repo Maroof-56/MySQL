@@ -1,0 +1,287 @@
+JOINS
+
+ 
+   Joins ops is used to combine rows from two or more table based on a related column between  them.
+
+   Ex : Like in previous example I have 2 table customers & orders so, if i want to see data inside the table it  need to view separately even both has relation between them 
+   We can see this using join
+
+
+  TYPES  OF JOIN 
+
+      - Cross join
+      - Inner join 
+      - Left join 
+      - Right join 
+
+   Cross join 
+     Every row from one table is combined with every row from another table.
+
+      Select * from customers,orders;
+
+
+   Inner join
+      Relation between intersected points
+
+      It shows data between relational row in 2 table
+
+
+   mysql> select * from customers
+    -> INNER JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id;
+
+   ( This will  show the data of customer with relation of orders )
++---------+-----------+------------------+--------+------------+----------+---------+
+| cust_id | name      | email            | ord_id | date       | amount   | cust_id |
++---------+-----------+------------------+--------+------------+----------+---------+
+|       1 | Maroof    | Maroof@gmail.com |      1 | 2024-11-02 |   675.30 |       1 |
+|       1 | Maroof    | Maroof@gmail.com |      2 | 2024-11-02 |  1675.30 |       1 |
+|       1 | Maroof    | Maroof@gmail.com |      3 | 2024-11-02 |  3564.00 |       1 |
+|       2 | Shaikh    | Shaikh@gmail.com |      4 | 2024-11-02 |  3564.00 |       2 |
+|       2 | Shaikh    | Shaikh@gmail.com |      7 | 2024-11-02 |  7896.00 |       2 |
+|       3 | Ahmed     | Ahmed@gmail.com  |      5 | 2024-11-02 | 33452.00 |       3 |
+|       5 | Shashaikh | sha@gmail.com    |      6 | 2024-11-02 |  7732.00 |       5 |
++---------+-----------+------------------+--------+------------+----------+---------+
+
+     EX 2 : If u want how much Rs each customer has spend on order 
+
+      mysql> select name , SUM(amount) from customers
+    -> INNER JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id
+    -> group by name;
+
++-----------+-------------+
+| name      | SUM(amount) |
++-----------+-------------+
+| Maroof    |     5914.60 |
+| Shaikh    |    11460.00 |
+| Ahmed     |    33452.00 |
+| Shashaikh |     7732.00 |
++-----------+-------------+
+
+
+
+   LEFT JOIN 
+       Return all rows from left(or first) table and the matching rows from right(or second) table.
+
+       Imagine 2 circle as table with intersection between them , here it will give whole data of left circle & intersected part data of 2nd circle.
+
+       mysql> select *  from customers
+    -> LEFT JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id;
+
+      ( This join gives the whole data of left (customers) table , as see below cust_id 4 has nothing buy but it show null,it shows all data )
++---------+-----------+------------------+--------+------------+----------+---------+
+| cust_id | name      | email            | ord_id | date       | amount   | cust_id |
++---------+-----------+------------------+--------+------------+----------+---------+
+|       1 | Maroof    | Maroof@gmail.com |      1 | 2024-11-02 |   675.30 |       1 |
+|       1 | Maroof    | Maroof@gmail.com |      2 | 2024-11-02 |  1675.30 |       1 |
+|       1 | Maroof    | Maroof@gmail.com |      3 | 2024-11-02 |  3564.00 |       1 |
+|       2 | Shaikh    | Shaikh@gmail.com |      4 | 2024-11-02 |  3564.00 |       2 |
+|       2 | Shaikh    | Shaikh@gmail.com |      7 | 2024-11-02 |  7896.00 |       2 |
+|       3 | Ahmed     | Ahmed@gmail.com  |      5 | 2024-11-02 | 33452.00 |       3 |
+|       4 | Mshaikh   | ms@gmail.com     |   NULL | NULL       |     NULL |    NULL |
+|       5 | Shashaikh | sha@gmail.com    |      6 | 2024-11-02 |  7732.00 |       5 |
++---------+-----------+------------------+--------+------------+----------+---------+
+
+
+
+       mysql> select name , SUM(amount) from customers
+    -> LEFT JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id
+    -> group by name;
++-----------+-------------+
+| name      | SUM(amount) |
++-----------+-------------+
+| Maroof    |     5914.60 |
+| Shaikh    |    11460.00 |
+| Ahmed     |    33452.00 |
+| Mshaikh   |        NULL |
+| Shashaikh |     7732.00 |
++-----------+-------------+
+                                       ( IT PRINT 0 IN PLACE OF NULL )
+       mysql> select name , IFNULL(SUM(amount),0) from customers
+    -> LEFT JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id
+    -> group by name;
++-----------+-----------------------+
+| name      | IFNULL(SUM(amount),0) |
++-----------+-----------------------+
+| Maroof    |               5914.60 |
+| Shaikh    |              11460.00 |
+| Ahmed     |              33452.00 |
+| Mshaikh   |                  0.00 |
+| Shashaikh |               7732.00 |
++-----------+-----------------------+
+
+                               ( Show Total - here use alias ) 
+      mysql> select name , IFNULL(SUM(amount),0) as Total from customers
+    -> LEFT JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id
+    -> group by name;
+
+
+
+
+
+
+
+    RIGHT JOIN 
+
+        Opposite of left join.
+        Return all row from right & matching row from left.
+
+
+        mysql> select * from customers
+    -> RIGHT JOIN
+    -> orders
+    -> ON orders.cust_id=customers.cust_id;
+
+        ( Data whose nothing buy not displayed ) 
++---------+-----------+------------------+--------+------------+----------+---------+
+| cust_id | name      | email            | ord_id | date       | amount   | cust_id |
++---------+-----------+------------------+--------+------------+----------+---------+
+|       1 | Maroof    | Maroof@gmail.com |      1 | 2024-11-02 |   675.30 |       1 |
+|       1 | Maroof    | Maroof@gmail.com |      2 | 2024-11-02 |  1675.30 |       1 |
+|       1 | Maroof    | Maroof@gmail.com |      3 | 2024-11-02 |  3564.00 |       1 |
+|       2 | Shaikh    | Shaikh@gmail.com |      4 | 2024-11-02 |  3564.00 |       2 |
+|       3 | Ahmed     | Ahmed@gmail.com  |      5 | 2024-11-02 | 33452.00 |       3 |
+|       5 | Shashaikh | sha@gmail.com    |      6 | 2024-11-02 |  7732.00 |       5 |
+|       2 | Shaikh    | Shaikh@gmail.com |      7 | 2024-11-02 |  7896.00 |       2 |
++---------+-----------+------------------+--------+------------+----------+---------+
+
+
+
+__________________________________________________________________________________________
+
+   
+   EXERCISE 8    ( BASED ON RELATIONS & JOINS )
+
+
+    
+      mysql> create table books(
+    -> book_id int auto_increment primary key,
+    -> title varchar(50) not null,
+    -> rating decimal(2,1) not null,        ( So that we can gave rating like 4.5,5 out of 5)
+    -> auth_id  int,
+    -> FOREIGN KEY (auth_id) REFERENCES authors(auth_id) ON DELETE CASCADE
+    -> );
+
+
+       mysql> desc books;
++---------+--------------+------+-----+---------+----------------+
+| Field   | Type         | Null | Key | Default | Extra          |
++---------+--------------+------+-----+---------+----------------+
+| book_id | int          | NO   | PRI | NULL    | auto_increment |
+| title   | varchar(50)  | NO   |     | NULL    |                |
+| rating  | decimal(2,1) | YES  |     | NULL    |                |
+| auth_id | int          | YES  | MUL | NULL    |                |
++---------+--------------+------+-----+---------+----------------+
+
+
+      mysql> INSERT into books(title,rating,auth_id)
+    -> values ('College a trap ?',5,1),('Hello world a person ?',4.5,2),
+    -> ('Coding a scam',4.4,3);
+
+    mysql> select * from books;
++---------+------------------------+--------+---------+
+| book_id | title                  | rating | auth_id |
++---------+------------------------+--------+---------+
+|       1 | College a trap ?       |    5.0 |       1 |
+|       2 | Hello world a person ? |    4.5 |       2 |
+|       3 | Coding a scam          |    4.4 |       3 |
++---------+------------------------+--------+---------+
+
+
+  ( FIRST VIEW )
+
+   mysql> select auth_name , title , rating from authors,books;
++-----------+------------------------+--------+
+| auth_name | title                  | rating |
++-----------+------------------------+--------+
+| Ahmed     | College a trap ?       |    5.0 |
+| Shaikh    | College a trap ?       |    5.0 |
+| Maroof    | College a trap ?       |    5.0 |
+| Ahmed     | Hello world a person ? |    4.5 |
+| Shaikh    | Hello world a person ? |    4.5 |
+| Maroof    | Hello world a person ? |    4.5 |
+| Ahmed     | Coding a scam          |    4.4 |
+| Shaikh    | Coding a scam          |    4.4 |
+| Maroof    | Coding a scam          |    4.4 |
++-----------+------------------------+--------+
+
+
+  ( Correct version of above view )
+
+  mysql> select auth_name,title,rating
+    -> from authors
+    -> inner join
+    -> books
+    -> ON books.auth_id=authors.auth_id;
++-----------+------------------------+--------+
+| auth_name | title                  | rating |
++-----------+------------------------+--------+
+| Maroof    | College a trap ?       |    5.0 |
+| Shaikh    | Hello world a person ? |    4.5 |
+| Ahmed     | Coding a scam          |    4.4 |
++-----------+------------------------+--------+
+
+
+
+   mysql> select auth_name,title,rating from authors
+    -> left join
+    -> books
+    -> ON books.auth_id=authors.auth_id;
++-----------+------------------------+--------+
+| auth_name | title                  | rating |
++-----------+------------------------+--------+
+| Maroof    | College a trap ?       |    5.0 |
+| Shaikh    | Hello world a person ? |    4.5 |
+| Ahmed     | Coding a scam          |    4.4 |
+| ms        |                        |    0.0 |
++-----------+------------------------+--------+
+
+
+   mysql> select auth_name, IFNULL(title,'Not found'),IFNULL(rating,0)
+
+    -> from authors
+    -> left join
+    -> books
+    -> ON books.auth_id=authors.auth_id;
++-----------+---------------------------+------------------+
+| auth_name | IFNULL(title,'Not found') | IFNULL(rating,0) |
++-----------+---------------------------+------------------+
+| Maroof    | College a trap ?          |              5.0 |
+| Shaikh    | Hello world a person ?    |              4.5 |
+| Ahmed     | Coding a scam             |              4.4 |
+| ms        |                           |              0.0 |
++-----------+---------------------------+------------------+
+
+
+
+
+mysql> select auth_name , rating,
+    -> CASE
+    ->    WHEN IFNULL(rating,0) >=4 THEN 'Good'
+    ->    ELSE 'Average'
+    -> END as remark
+    -> from authors
+    -> inner join
+    -> books
+    -> ON books.auth_id=authors.auth_id;
+
+
++-----------+--------+---------+
+| auth_name | rating | remark  |
++-----------+--------+---------+
+| Maroof    |    5.0 | Good    |
+| Shaikh    |    4.5 | Good    |
+| Ahmed     |    4.4 | Good    |
+| ms        |    0.0 | Average |
++-----------+--------+---------+

@@ -1,0 +1,170 @@
+Constraint
+
+
+   UNIQUE ( To use unique value )
+          
+        - We can also use primary key , but primary key can only be used once that's y Unique constraint come to an end.
+
+
+     mysql> create table contact(
+    -> mob int unique
+    -> );
+
+
++-------+------+------+-----+---------+-------+
+| Field | Type | Null | Key | Default | Extra |
++-------+------+------+-----+---------+-------+  ( Key is unique )
+| mob   | int  | YES  | UNI | NULL    |       |
++-------+------+------+-----+---------+-------+
+
+        ( It will show error when same entries will enter ) 
+ERROR 1062 (23000): Duplicate entry '989756477' for key 'contact.mob''
+
+
+  
+   CHECK 
+
+       To verify number is valid entered or not  ( Like mob no. is 10 digit or not ).
+
+
+        mysql> create table contacts(
+    -> mob varchar(15) unique check(length(mob) >= 10)
+    -> );
+
+
+
+mysql> desc contacts;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| mob   | varchar(15) | YES  | UNI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+
+mysql> select * from contacts;
++------------+
+| mob        |
++------------+
+| 9026060018 |
++------------+
+
+mysql> insert into contacts         ( It gives error of length )
+    -> values (9026087);
+ERROR 3819 (HY000): Check constraint 'contacts_chk_1' is violated.
+
+
+
+    NAMED CONSTRAINT 
+
+         Where things same as check constraint,use of this is constraint arrived bcoz when CHECK constaint throws an error then 3rd person not able to identify whats the error so to tell whats the error at output we can use named constraint
+
+
+    mysql> create table contact1(
+    -> mob varchar(15) unique,
+    -> CONSTRAINT mobno_less_than_10digit check(length(mob) >= 10)
+    -> );
+
+
+mysql> insert into contact1
+    -> values (235546);
+ERROR 3819 (HY000): Check constraint 'mobno_less_than_10digit' is violated.  ( Here it is easily readable error ) see above error check constraint
+
+
+     ADD OR DROP CONTRAINT 
+
+
+          How to check existing constraint 
+ 
+    mysql> select CONSTRAINT_TYPE, CONSTRAINT_NAME
+    -> FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+    -> WHERE TABLE_NAME='contact1';
+
+
+ +-----------------+-------------------------+
+| CONSTRAINT_TYPE | CONSTRAINT_NAME         |
++-----------------+-------------------------+
+| UNIQUE          | mob                     |
+| CHECK           | mobno_less_than_10digit |
++-----------------+-------------------------+
+
+          To Delete Constraint
+
+    mysql> alter table contact1
+    -> drop constraint mobno_less_than_10digit;
+
+          To Add Constraint
+
+   mysql> alter table contact1
+   -> add constraint mob_no_check check(length(mob) >= 10);
+
+______________________________________________________________________________________________________
+
+
+   ALTER TABLE 
+
+
+       To Add new column
+
+      mysql> alter  table contact add column name varchar(10);
+
+
+       To Delete column 
+
+
+       mysql> alter table contact drop name;
+
+
+       To Rename column 
+
+        mysql> alter table contact
+    -> rename column mob to Mobile_No;
+
+
+       To Rename Table name 
+
+       mysql> alter table contact rename to mycontact;
+                     OR
+       mysql> rename table mycontact to mycontacts;
+
+
+       Modification In Column 
+
+           - like changing datatypes or more 
+
+         Before Mod
+     
+         mysql> desc mycontacts;
++-----------+------+------+-----+---------+-------+
+| Field     | Type | Null | Key | Default | Extra |
++-----------+------+------+-----+---------+-------+
+| Mobile_No | int  | YES  | UNI | NULL    |       |
++-----------+------+------+-----+---------+-------+
+
+         After Mod
+
+         mysql> alter table mycontacts
+    -> modify Mobile_No varchar(13);
+       
+   mysql> desc mycontacts;                      ( Here in mod change its datatype ) 
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Mobile_No | varchar(13) | YES  | UNI | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+
+
+         mysql> alter table mycontacts
+    -> modify Mobile_No varchar(13) default 'Unknown';
+
+  mysql> desc mycontacts;                    ( In mod set default value )
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Mobile_No | varchar(13) | YES  | UNI | Unknown |       |
++-----------+-------------+------+-----+---------+-------+
+
+
+    MODIFY COLUMN NAME & DATA AT SAME TIME ( IN ONE QUERY )
+
+
+        mysql> alter table mycontacts
+       -> change Mobile_No Mob varchar(13) not null;

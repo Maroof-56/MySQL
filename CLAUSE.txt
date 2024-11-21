@@ -1,0 +1,492 @@
+ CLAUSE 
+
+
+    DISTINCT 
+
+       Using this clause we can extract different data from tables,Eg:dept,name etc.
+
+     
+       - select distinct dept from employess; ( It will search for diff dept present in table)
+
+       - select distinct lname,name from employess; ( Also use it as combination)
+
+
+    ORDERBY 
+
+       Basically it is Use to sort the columns entries /  in tables
+
+        - select * from employess order by name;
+
+          mysql> select * from employess order by name; (Asscending order)
+
++-----+------+-----------+---------+-------+
+| id  | name | design    | dept    | lname |
++-----+------+-----------+---------+-------+
+| 105 | csk  | Probation | ddr     | NULL  |
+| 103 | kkr  | Probation | cashier | NULL  |
+| 100 | mrf  | Probation | loan    | ahmd  |
+| 104 | mum  | Probation | Info    | NULL  |
+| 102 | shk  | Probation | loan    | shk   |
++-----+------+-----------+---------+-------+
+
+
+          mysql> select * from employess order by name desc; (Descending Order)
+          mysql> select * from employess order by 4; Column Number  
+
++-----+------+-----------+---------+-------+
+| id  | name | design    | dept    | lname |
++-----+------+-----------+---------+-------+
+| 102 | shk  | Probation | loan    | shk   |
+| 104 | mum  | Probation | Info    | NULL  |
+| 100 | mrf  | Probation | loan    | ahmd  |
+| 103 | kkr  | Probation | cashier | NULL  |
+| 105 | csk  | Probation | ddr     | NULL  |
++-----+------+-----------+---------+-------+
+
+
+
+  LIKE 
+
+     It is use to find the word similar to word u provide 
+     
+     - Ex : Suppose im searching in dept section for cashier but I don't properly remember whether it is cash or cashier so we can find using this command.
+
+     - select * from employess where dept like "%cash%";
+    
+     mysql> select * from employess where dept like "%lo%";
+
++-----+------+-----------+------+-------+
+| id  | name | design    | dept | lname |
++-----+------+-----------+------+-------+
+| 100 | mrf  | Probation | loan | ahmd  |
+| 102 | shk  | Probation | loan | shk   |
++-----+------+-----------+------+-------+
+
+
+     mysql> select * from employess where dept like "____"; ( 4 underscore means in dept it will give only 4 char length name output)
+
++-----+------+-----------+------+-------+
+| id  | name | design    | dept | lname |
++-----+------+-----------+------+-------+
+| 100 | mrf  | Probation | loan | ahmd  |
+| 102 | shk  | Probation | loan | shk   |
+| 104 | mum  | Probation | Info | NULL  |
++-----+------+-----------+------+-------+
+    
+
+     mysql> select * from employess where dept like "l___"; ( char should start from l)
+
++-----+------+-----------+------+-------+
+| id  | name | design    | dept | lname |
++-----+------+-----------+------+-------+
+| 100 | mrf  | Probation | loan | ahmd  |
+| 102 | shk  | Probation | loan | shk   |
++-----+------+-----------+------+-------+
+
+
+     mysql> select * from employess where dept like "%o"; ( End with o )
+
++-----+------+-----------+------+-------+
+| id  | name | design    | dept | lname |
++-----+------+-----------+------+-------+
+| 104 | mum  | Probation | Info | NULL  |
++-----+------+-----------+------+-------+
+
+
+      mysql> select * from employess where dept like "%006"; (also search it for integers )
+
+
+
+  LIMIT 
+
+     Use to limit the data 
+
+     mysql> select * from employess limit 3;
+
++-----+------+-----------+---------+-------+--------+
+| id  | name | design    | dept    | lname | salary |
++-----+------+-----------+---------+-------+--------+
+| 100 | mrf  | Probation | loan    | ahmd  |   NULL |
+| 102 | shk  | Probation | loan    | shk   |   NULL |
+| 103 | kkr  | Probation | cashier | NULL  |   NULL |
++-----+------+-----------+---------+-------+--------+
+
+     mysql> select * from employess limit 3,3; (it will  records after 3rd one)
+
++-----+------+-----------+------+-------+--------+
+| id  | name | design    | dept | lname | salary |
++-----+------+-----------+------+-------+--------+
+| 104 | mum  | Probation | Info | NULL  |   NULL |
+| 105 | csk  | Probation | ddr  | NULL  |   NULL |
+| 106 | mrf  | Probation | loan | NULL  |  45000 |
++-----+------+-----------+------+-------+--------+
+
+     mysql> select * from employess order by salary desc limit 1;
+
++-----+------+-----------+------+-------+--------+
+| id  | name | design    | dept | lname | salary |
++-----+------+-----------+------+-------+--------+
+| 106 | mrf  | Probation | loan | NULL  |  45000 |
++-----+------+-----------+------+-------+--------+
+
+     
+  COUNT 
+
+
+    mysql> select count(*) from employess;
+
++----------+
+| count(*) |
++----------+
+|       10 |
++----------+
+
+   mysql> select count(distinct(name)) from employess;
+
++-----------------------+
+| count(distinct(name)) |
++-----------------------+
+|                     5 |
++-----------------------+
+
+
+  mysql> select count(id) from employess where dept='loan';
+
++-----------+
+| count(id) |
++-----------+
+|         7 |
++-----------+
+
+
+  
+  GROUPBY 
+
+    Grouping based on common things like in dept group of loan,cash,it ,etc
+
+
+    
+    mysql> select dept from employess group by dept;
+
++---------+   ( 4 diff group it create )
+| dept    |
++---------+
+| loan    |
+| cashier |
+| Info    |
+| ddr     |
++---------+
+
+
+     mysql> select dept , count(id) from employess group by dept;
+
++---------+-----------+
+| dept    | count(id) |
++---------+-----------+
+| loan    |         7 |
+| cashier |         1 |
+| Info    |         1 |
+| ddr     |         1 |
++---------+-----------+
+
+
+
+ MAX MIN 
+
+   
+     mysql> select max(salary) from employees;
+
++-------------+
+| max(salary) |
++-------------+
+|       80000 |
++-------------+
+
+
+     mysql> select name , salary from employees    ( To get high with name)
+    -> where
+    -> salary = ( select max(salary) from employees);
+
++--------+--------+
+| name   | salary |
++--------+--------+
+| Maroof |  80000 |
++--------+--------+
+
+
+     mysql> select max(name) from employees;   ( select max value alphabets wise
+
++-----------+
+| max(name) |
++-----------+
+| Victor    |
++-----------+
+
+
+  SUM & AVG 
+
+
+      
+     mysql> select sum(salary) from employees;
+
++-------------+
+| sum(salary) |
++-------------+
+|      220000 |
++-------------+
+1 row in set (0.01 sec)
+
+     mysql> select avg(salary) from employees;
+
++-------------+
+| avg(salary) |
++-------------+
+|  44000.0000 |
++-------------+
+
+     mysql> select dept , sum(salary) from employees   ( sum of salary grp by dept ) 
+    -> group by dept;
+
++----------+-------------+
+| dept     | sum(salary) |
++----------+-------------+
+| Loan     |       45000 |
+| IT       |      120000 |
+| Account  |       30000 |
+| Deposite |       25000 |
++----------+-------------+
+
+
+     mysql> select dept , count(emp_id),sum(salary) from employees
+    -> group by dept;
+
+     ( It count number of person in dept also )
++----------+---------------+-------------+
+| dept     | count(emp_id) | sum(salary) |
++----------+---------------+-------------+
+| Loan     |             1 |       45000 |
+| IT       |             2 |      120000 |
+| Account  |             1 |       30000 |
+| Deposite |             1 |       25000 |
++----------+---------------+-------------+
+
+
+
+    HAVING CLAUSE           ( vdo 76, ref views)
+
+
+     ( In this case where clause is not working with group by clause )
+
+     mysql> select tea_name ,SUM(fees) from institute_info group by tea_name where SUM(fees) > 70000;
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where SUM(fees) > 70000' at line 1
+
+
+     ( BUT HAVING WILL  WORK FINE WITH GROUP BY IN THIS CASE )
+
+    mysql> select tea_name ,SUM(fees) from institute_info group by tea_name HAVING SUM(fees) > 70000;
+
++------------+-----------+
+| tea_name   | SUM(fees) |
++------------+-----------+
+| Ashfaq S   |    100000 |
+| Zainab M   |    165000 |
+| Shabina Sa |     76000 |
+| Vikas B    |     80000 |
++------------+-----------+
+
+
+
+  GROUP BY WITH ROLLUP  ( Rollup work with group by & can use with many function)
+
+   
+    It give the total sum of a specific column.
+
+    mysql> select tea_name , SUM(fees) from institute_info group by tea_name with ROLLUP;]
+
++------------+-----------+
+| tea_name   | SUM(fees) |
++------------+-----------+
+| Ashfaq S   |    100000 |
+| Farida A   |     60000 |
+| Shabana S  |     65000 |
+| Shabina Sa |     76000 |
+| Vikas B    |     80000 |
+| Zainab M   |    165000 |
+| NULL       |    546000 |
++------------+-----------+
+
+
+
+mysql> select IFNULL(tea_name,'Total') , SUM(fees) from institute_info group by tea_name with ROLLUP;
+
++--------------------------+-----------+
+| IFNULL(tea_name,'Total') | SUM(fees) |
++--------------------------+-----------+
+| Ashfaq S                 |    100000 |
+| Farida A                 |     60000 |
+| Shabana S                |     65000 |
+| Shabina Sa               |     76000 |
+| Vikas B                  |     80000 |
+| Zainab M                 |    165000 |
+| Total                    |    546000 |
++--------------------------+-----------+
+
+
+
+mysql> select IFNULL(tea_name,'Total') , COUNT(fees) from institute_info group by tea_name with ROLLUP;
+
++--------------------------+-------------+
+| IFNULL(tea_name,'Total') | COUNT(fees) |
++--------------------------+-------------+
+| Ashfaq S                 |           1 |
+| Farida A                 |           1 |
+| Shabana S                |           1 |
+| Shabina Sa               |           1 |
+| Vikas B                  |           1 |
+| Zainab M                 |           2 |
+| Total                    |           7 |
++--------------------------+-------------+
+
+______________________________________________________________________________________________________________
+  EXERCISE 4
+   
+
+       mysql> select *  from employees order by salary desc;
+
+       ( Salary from high to low ) 
++--------+--------+------------+----------+--------+
+| emp_id | name   | design     | dept     | salary |
++--------+--------+------------+----------+--------+
+|    106 | Maroof | CEO        | IT       |  80000 |
+|    101 | Raju   | Manager    | Loan     |  45000 |
+|    103 | Paul   | Associate  | IT       |  40000 |
+|    104 | Alex   | Accountant | Account  |  30000 |
+|    105 | Victor | Associate  | Deposite |  25000 |
++--------+--------+------------+----------+--------+
+5 rows in set (0.00 sec)
+
+      mysql> select *  from employees limit 3;
+
+      ( Top 3 records shown) 
++--------+------+------------+---------+--------+
+| emp_id | name | design     | dept    | salary |
++--------+------+------------+---------+--------+
+|    101 | Raju | Manager    | Loan    |  45000 |
+|    103 | Paul | Associate  | IT      |  40000 |
+|    104 | Alex | Accountant | Account |  30000 |
++--------+------+------------+---------+--------+
+
+      mysql> select * from employees where name like "A%";
+
+      ( Name start with A )
+
++--------+------+------------+---------+--------+
+| emp_id | name | design     | dept    | salary |
++--------+------+------------+---------+--------+
+|    104 | Alex | Accountant | Account |  30000 |
++--------+------+------------+---------+--------+
+
+      mysql> select * from employees where name like "____";
+
+      ( Name include 4 char )
++--------+------+------------+---------+--------+
+| emp_id | name | design     | dept    | salary |
++--------+------+------------+---------+--------+
+|    101 | Raju | Manager    | Loan    |  45000 |
+|    103 | Paul | Associate  | IT      |  40000 |
+|    104 | Alex | Accountant | Account |  30000 |
++--------+------+------------+---------+--------+
+     
+      mysql> select distinct(dept) from employees;
+  
+      ( Different dept ) 
++----------+
+| dept     |
++----------+
+| Loan     |
+| IT       |
+| Account  |
+| Deposite |
++----------+
+
+
+_______________________________________________________________________________________________
+
+    EXERCISE 5 
+
+
+      mysql> select count(emp_id) from employees;
+
+      ( Total no. of employees on table ) 
++---------------+
+| count(emp_id) |
++---------------+
+|             5 |
++---------------+
+
+
+       mysql> select dept , count(emp_id) from employees
+    -> group by dept;
+
+       ( Total no of employees in each dept)
+
+
++----------+---------------+
+| dept     | count(emp_id) |
++----------+---------------+
+| Loan     |             1 |
+| IT       |             2 |
+| Account  |             1 |
+| Deposite |             1 |
++----------+---------------+
+
+     
+      mysql> select min(salary) from employees;
+
+       ( Lowest salary ) & same for high 
+
++-------------+
+| min(salary) |
++-------------+
+|       25000 |
++-------------+
+
+      mysql> select * from employees
+    -> where salary=(select max(salary) from employees);
+
+      ( Max sal with all data )
+
++--------+--------+--------+------+--------+
+| emp_id | name   | design | dept | salary |
++--------+--------+--------+------+--------+
+|    106 | Maroof | CEO    | IT   |  80000 |
++--------+--------+--------+------+--------+
+
+      mysql> select dept , sum(salary) from employees
+    -> group  by dept;
+
+      ( total salary paying in each dept ) & same for avg
+
++----------+-------------+
+| dept     | sum(salary) |
++----------+-------------+
+| Loan     |       45000 |
+| IT       |      120000 |
+| Account  |       30000 |
+| Deposite |       25000 |
++----------+-------------+
+
+      mysql> select sum(salary) from employees
+    -> where dept="Loan";
+
+      ( total salary in each dept)
++-------------+
+| sum(salary) |
++-------------+
+|       45000 |
++-------------+
+
+
+_________________________________________________________________________________________
+      

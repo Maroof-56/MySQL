@@ -1,0 +1,299 @@
+String Function & Operators 
+
+
+
+Concat 
+
+
+ STRING
+
+   To add one or more string 
+ 
+     - concat('hello','uncle');
+    
+        o/p - hellouncle (to add space ' ',in between)
+
+     - Ex 
+ +-----+------+-----------+------+-------+
+| id  | name | design    | dept | lname |
++-----+------+-----------+------+-------+
+| 100 | mrf  | Probation | loan | ahmd  |
+| 102 | shk  | Probation | loan | shk   |
++-----+------+-----------+------+-------+
+
+    Want to merge name &  lname as fullname 
+
+    - select id,concat(name,' ',lname) as fullname from table; (can also add any string in place of space)
+
++-----+----------+
+| id  | FullName |
++-----+----------+
+| 100 | mrf ahmd |
+| 102 | shk shk  |
++-----+----------+
+
+
+CONCAT_WS   ( word separator)
+
+    It add separator to all the string 
+    Ex: ('-','mrf','shk','hey','lo',)  (it will add - between every word ,this os diff from above one  )
+
+    1.EX:
+
++-------------------------------+
+| concat_ws(':',id,name,design) |
++-------------------------------+
+| 100:mrf:Probation             |
+| 102:shk:Probation             |
++-------------------------------+
+
+
+ SUBSTRING  (substr also work)
+
+    It can use to extract specific part 
+
+    select substring('heyy bro',1,4)  - o/p - heyy (1-start from first alphabet ,4-end to 4 alphabets)
+   
+     EX:
+  mysql> select substring('Navjevan',4,8);
+
++---------------------------+
+| substring('Navjevan',4,8) |
++---------------------------+
+| jevan                     |
+
+
+
+  mysql> select substring('Navjevan',4); (end is not provided b
++-------------------------+
+| substring('Navjevan',4) |
++-------------------------+
+| jevan                   |
++-------------------------+
+
+
+  mysql> select substring('Navjevan is the hotel',-5); ( here I want hotel name countin from start to end could be hectic so I start from end & count alpbhabets of hotel & apply -5 to extract )
++---------------------------------------+
+| substring('Navjevan is the hotel',-5) |
++---------------------------------------+
+| hotel                                 |
++---------------------------------------+
+
+
+ mysql> select substring(id,2,3) as EmpID , name from employess;  (id,2) also work
++-------+------+
+| EmpID | name |
++-------+------+
+| 00    | mrf  |
+| 02    | shk  |
++-------+------+
+
+
+REPLACE 
+
+ 
+    replace (str,from str,to str)
+    replace('heyy bro','heyy,'hello')  -op- hello bro
+
+   - mysql> select replace(id,10,100) from employess;
++--------------------+
+| replace(id,10,100) |
++--------------------+
+| 1000               |
+| 1002               |
++--------------------+
+
+mysql> select replace(id,10,100) as NewID , name from employess;
++-------+------+
+| NewID | name |
++-------+------+
+| 1000  | mrf  |
+| 1002  | shk  |
++-------+------+
+
+ mysql> select replace ('Heyy Bai',' ','');  ( remove white space)
++-----------------------------+
+| replace ('Heyy Bai',' ','') |
++-----------------------------+
+| HeyyBai                     |
++-----------------------------+
+
+
+REVERSE 
+
+   mysql> select reverse('Maroof');
++-------------------+
+| reverse('Maroof') |
++-------------------+
+| fooraM            |
++-------------------+
+
+   mysql> select id,reverse(name) as rname from employess;
++-----+-------+
+| id  | rname |
++-----+-------+
+| 100 | frm   |
+| 102 | khs   |
++-----+-------+
+
+
+ UPPER & LOWER CASE
+
+   mysql> select upper('maroof');   Ucase
++-----------------+
+| upper('maroof') |
++-----------------+
+| MAROOF          |
++-----------------+
+
+
+   mysql> select lower('MAROOF');   lcase
++-----------------+
+| lower('MAROOF') |
++-----------------+
+| maroof          |
++-----------------+
+
+
+   mysql> select id,upper(name) from employess;
++-----+-------------+
+| id  | upper(name) |
++-----+-------------+
+| 100 | MRF         |
+| 102 | SHK         |
++-----+-------------+
+
+
+   CHAR_LENGTH
+
+mysql> select char_length('Maroof');
++-----------------------+
+| char_length('Maroof') |
++-----------------------+
+|                     6 |
++-----------------------+
+
+mysql> select id,char_length(name) as Name_Length from employess;
++-----+-------------+
+| id  | Name_Length |
++-----+-------------+
+| 100 |           3 |
+| 102 |           3 |
++-----+-------------+
+    
+   
+ mysql> select * from employess   ( it will give all name lngth > than 2 )
+    -> where char_length(name) > 2;
++-----+------+-----------+------+-------+
+| id  | name | design    | dept | lname |
++-----+------+-----------+------+-------+
+| 100 | mrf  | Probation | loan | ahmd  |
+| 102 | shk  | Probation | loan | shk   |
++-----+------+-----------+------+-------+
+
+ 
+ OTHER FUNCTION 
+  
+   
+  
+mysql> select insert('Heyy Wassup',6,0,'Maroof ');
++-------------------------------------+
+| insert('Heyy Wassup',6,0,'Maroof ') |
++-------------------------------------+
+| Heyy Maroof Wassup                  |
++-------------------------------------+
+
+
+mysql> select left('Maroof',3);     (same for right)
++------------------+
+| left('Maroof',3) |
++------------------+
+| Mar              |
++------------------+
+
+mysql> select trim('  Maroof ! ');
++---------------------+
+| trim('  Maroof ! ') |
++---------------------+
+| Maroof !            |
++---------------------+
+
+
+Exercise : (one or more function used )
+
+ 1. mysql> select concat_ws(':',id,concat(name,' ',lname),design,dept)from employess;
+
++------------------------------------------------------+
+| concat_ws(':',id,concat(name,' ',lname),design,dept) |
++------------------------------------------------------+
+| 100:mrf ahmd:Probation:loan                          |
+| 102:shk shk:Probation:loan                           |
++------------------------------------------------------+
+
+  2. mysql> select concat_ws(':',id,name,ucase(design),dept) from employess;
+
++-------------------------------------------+
+| concat_ws(':',id,name,ucase(design),dept) |
++-------------------------------------------+
+| 100:mrf:PROBATION:loan                    |
+| 102:shk:PROBATION:loan                    |
++-------------------------------------------+
+
+       id      name
+   3.  L101     mrf        (first letter indicate which dept user is belongs to like  loan -L ,Cashier-C)
+       L102     shk
+
+     - step for above output
+       
+       mysql> select id,name from employess;
++-----+------+
+| id  | name |
++-----+------+
+| 100 | mrf  |
+| 102 | shk  |
++-----+------+
+
+     - Add dept
+
+       mysql> select concat(dept,id),name from employess;
+
++-----------------+------+
+| concat(dept,id) | name |
++-----------------+------+
+| loan100         | mrf  |
+| loan102         | shk  |
++-----------------+------+
+       
+      - using substr
+
+         mysql> select concat(substr(dept,1,1),id),name from employess;
+
++-----------------------------+------+
+| concat(substr(dept,1,1),id) | name |
++-----------------------------+------+
+| l100                        | mrf  |
+| l102                        | shk  |
++-----------------------------+------+
+
+      - using left 
+
+         mysql> select concat(left(dept,1),id),name from employess;
+
++-------------------------+------+
+| concat(left(dept,1),id) | name |
++-------------------------+------+
+| l100                    | mrf  |
+| l102                    | shk  |
++-------------------------+------+
+
+
+     mysql> select concat(left(dept,1),id),name from employess;
+
++-------------------------+------+
+| concat(left(dept,1),id) | name |
++-------------------------+------+
+| l100                    | mrf  |
+| l102                    | shk  |
+| c103                    | kkr  |
+| I104                    | mum  |
+| d105                    | csk  |

@@ -1,0 +1,160 @@
+
+ First while enter in DB server 
+  - Check for existing dtabase  - show databases;
+  
+  - create databse - create database name ;
+
+  - to use that database  - use database_name;
+
+  - to know inside the database - select database();
+
+  - to delete db - drop db_name;
+
+  - to clear terminal  - system cls;
+
+ 
+
+ TABLE 
+
+  - create table 
+
+    - to create table - create table student(id int,name char);
+    - to verify table is created - desc table_name;  (desc-described)
+
+  - Insert data into table 
+    
+    - 1. Insert into table_name(int,char) values (1,"hy");
+
+    - 2. Insert into table_name values (1,"hy");   (when u r adding sequencly)
+
+    - 3. To Read table data use select 
+       
+         - select *  from table_name;
+         - select name from table_name; ( to see name from table & so on )
+         - select * from name where id=1; ( to see specific data & so on )
+        
+
+     - 4. To modify data 
+
+          - alter table name add contact varchar(10);  ( to add more col )
+          - update student set contact=23444 where id=1; ( to modify & add)
+
+     - 5. To delete data from table
+   
+          - delete from name where id=1;
+
+     - 6. To delete whole table 
+  
+          - drop table name;
+
+
+ NOT NULL 
+
+      - 1. you can set null value in table 
+            
+           insert into customer value(NULL,NULL);  (it will set null in table)   (although this value doesnot mean anything)
+
+      - 2. To Avoid this value while creating table 
+
+           create table customer(id int NOT NULL , name varchar(20) NOT NULL ); (This is the good practice 
+
+
+DEFAULTS VALUE 
+
+       - 1. To set any value for defaults instead of null
+
+            create table name(id int , name varchar(10) , acc_type varchar(20) default 'savings');
+
+
+ PRIMARY KEY 
+
+        - The primary key constraint uniquely identifies each record in a table.
+        - Primary key must contain UNIQUES values, cannot contain null values.
+        -  A table can have only ONE primary key.
+
+        - Example understanding 
+          suppose we have created a table  in which id & name is same for both user so it can create problem to avoid this even if mistakenly use primary key after data type
+
+        create table name(
+             id int primary key,           (id could be same anymore)
+             name varchar(10) NOT NULL,    ( name can be same)
+             acc_type varchar(20) NOT NULL default 'saving'
+            );
+
+      
+        ERROR 1062 (23000): Duplicate entry '102' for key 'employee.PRIMARY'  & u cant set default id 
+
+
+
+  AUTO INCREMENT
+
+       
+          - 1. suppose if i add auto_increment for id so while inserting data u dont need to add id for every data.
+             EX:
+              insert into employee(name)
+               values ('mrf'),('shk');  (here i insert only name but it automatically set the id for both name )
+
+          - 2.Number start according to us 
+              insert into employee(id,name,acc_type)
+               values (100,'mrf','saving'); (here auto_increment i set should start from 100 & so on ).
+
+
+
+
+
+ ALIAS
+
+    To modify/make table more readable or beautiful format.
+
+
+    - Suppose i want to rename any column & row header name 
+       
+       select acc_type as 'Account Type.' from employee;
+
+       
+        EX :  
+              | acc_type |
+
+            | Account Type. |  o/p
+
+     - select acc_type as 'Account Type.' , name as 'Name' from employee; (can add multiple changes ).
+
+
+
+ WHERE clause 
+
+       To add condition to query to execute 
+
+      -  select * from employee
+    -> where id=102;                   (to find only)
++-----+------+----------+
+| id  | name | acc_type |
++-----+------+----------+
+| 102 | skh  | current  |
++-----+------+----------+
+
+      - mysql> select * from employee        (find specific type)
+    -> where acc_type='saving';
++-----+-------+----------+
+| id  | name  | acc_type |
++-----+-------+----------+
+| 100 | mrf   | saving   |
+| 101 | shk   | saving   |
+| 103 | hello | saving   |
+| 105 | kke   | saving   |
++-----+-------+----------+
+
+       -  select emp_id,name from employees;   ( to see multiple column & specific column)
+
+       - update employee set Contacts=276739092 where id=103;  (it add contact to that id)
+
+       - delete from employee Contacts where id=103;  ( delete that contact)
+
+
+       - mysql> select emp_id,name from employees where emp_id=101;
++--------+------+
+| emp_id | name |
++--------+------+                 ( to see specific column)
+|    101 | Raju |
++--------+------+
+   

@@ -1,0 +1,88 @@
+COMMON TABLE EXPRESSION
+
+
+
+   CTE is a temporary result set that you can define within a query to simplify complex sql statement 
+
+
+   Once CTE has been created,it can only be used once , I will not be persisted.
+
+   The command below I have executed is an single command although it has many lines ,but it is consider as a single command , see where used ; to know
+
+   syntax
+
+      WITH cte_name (optional_column_list) AS (
+
+            ...CTE query
+            SELECT ...
+)
+
+      ... Main query referencing the CTE
+      SELECT ...
+      FROM cte_name
+      WHERE ...;
+
+
+   
+    USE-CASE 1
+
+      We want to calculate the average salary per dept & then find all employees whose salary is  above the average salary of their dept.
+
+
+1.  step
+select dept, AVG(salary) from employees group by dept; ( avg sal per dept)
+
+dept    AVG(salary
+
+Loan	45000.0000
+IT	17200.0000
+Account	30000.0000
+Deposite25000.0000
+
+
+2. step
+
+WITH avg_sal AS (
+select dept, AVG(salary) as avg_salary from employees group by dept
+)
+
+SELECT 
+   e.emp_id,e.name,e.dept,e.salary,a.avg_salary  //( e refers original employees a refers cte data)
+   FROM employees e
+   JOIN
+       avg_sal as a ON e.dept=a.dept   //( join using common things between them )
+   WHERE 
+       e.salary > a.avg_salary;
+
+
+id      name    dept    salary   avg_salary
+103	Paul	IT	40000	17200.0000
+106	Maroof	IT	80000	17200.0000
+
+
+
+ USE-CASE 2 
+
+    We want to find the highest-paid employees in each department.
+
+
+    
+WITH max_sal AS (
+select dept, MAX(salary) as max_salary from employees group by dept
+)
+
+SELECT 
+   e.emp_id,e.name,e.dept,e.salary
+   FROM employees e
+   JOIN
+       max_sal as m ON e.dept=m.dept
+   WHERE 
+       e.salary = m.max_salary;
+
+
+101	Raju	Loan	45000
+104	Alex	Account	30000
+105	Victor	Deposite25000
+106	Maroof	IT	80000
+
+

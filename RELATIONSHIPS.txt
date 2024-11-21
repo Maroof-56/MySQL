@@ -1,0 +1,629 @@
+  RELATIONSHIPS
+
+              
+              Salary                     attendance
+
+                        Employees
+
+                         offices
+            
+              request                    task
+
+  There is an relationship between all these tables & it is called relationship
+
+
+
+   TYPES OF RELATIONHIP
+
+       - One to one 
+         ( Like emp only one detail is present / found )
+
+       - One to many
+         ( Like one emp has many task to perform so it found in many task )
+
+       - Many to many
+         ( Like one book can have multiple authors & one author can have multiple books )
+
+
+
+       
+    EXAMPLE TO UNDERSTAND
+
+       Suppose we have store in that we take from customer its name  email , order date price
+       If same customer arrives next day so he/she need to give its  details again in such case data is repeating 
+       To overcome these issues we make separate table for Customer details OR orders  details like .
+
+       Customer table 
+           Cust_id      name     email 
+
+       Orders table
+           order_id     date     amount
+
+       TO MAKE RELATION IN BETWEEN WE CAN REFERENCE Cust_id in Order table
+
+       Order table 
+           order_id     date     amount   Cust_id
+
+       IN Above reference the primary key cust_id refernced in order table as refernce & it is known as FOREIGN KEY
+
+
+
+    EXAMPLES
+
+   
+     mysql> create table customers(
+    -> cust_id int auto_increment primary key,
+    -> name varchar(20),
+    -> email varchar(20)
+    -> );
+
+mysql> desc customers;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| cust_id | int         | NO   | PRI | NULL    | auto_increment |
+| name    | varchar(20) | YES  |     | NULL    |                |
+| email   | varchar(20) | YES  |     | NULL    |                |
++---------+-------------+------+-----+---------+----------------+
+
+
+ mysql> create table orders(
+    -> ord_id int auto_increment primary key,
+    -> date DATE,
+    -> amount DECIMAL(10,2),
+    -> cust_id int,
+    -> FOREIGN KEY (cust_id) REFERENCES customers(cust_id)
+    -> );
+
+
+mysql> desc orders;
++---------+---------------+------+-----+---------+----------------+
+| Field   | Type          | Null | Key | Default | Extra          |
++---------+---------------+------+-----+---------+----------------+
+| ord_id  | int           | NO   | PRI | NULL    | auto_increment |
+| date    | date          | YES  |     | NULL    |                |
+| amount  | decimal(10,2) | YES  |     | NULL    |                |
+| cust_id | int           | YES  | MUL | NULL    |                |
++---------+---------------+------+-----+---------+----------------+
+
+  IN ABOVE EXAMPLE WE MAKE 2 TABLE & ADD REERENCE/FOREIGN KEY INTO SECOND ONE 
+  
+   TO CHECK FOREIGN KEY HAS ADDEED SUCCESFULLY OR NOT , BELOW QUERY
+
+     mysql> SELECT CONSTRAINT_NAME, COLUMN_NAME,
+    -> REFERENCED_TABLE_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+    -> WHERE TABLE_NAME='orders';
+
++-----------------+-------------+-----------------------+
+| CONSTRAINT_NAME | COLUMN_NAME | REFERENCED_TABLE_NAME |
++-----------------+-------------+-----------------------+
+| PRIMARY         | ord_id      | NULL                  |
+| orders_ibfk_1   | cust_id     | customers             |
++-----------------+-------------+-----------------------+
+
+
+       
+   EXAMPLE OUTPUT
+
+     mysql> insert into customers(name,email)
+    -> values ('Maroof','Maroof@gmail.com'),('Shaikh','Shaikh@gmail.com);
+
+mysql> select * from customers;
++---------+--------+------------------+
+| cust_id | name   | email            |
++---------+--------+------------------+
+|       1 | Maroof | Maroof@gmail.com |
+|       2 | Shaikh | Shaikh@gmail.com |
++---------+--------+------------------+
+
+     mysql> insert into orders(date,amount,cust_id)
+    -> values (curdate(),675.3,1);
+
+mysql> select * from orders;
++--------+------------+--------+---------+
+| ord_id | date       | amount | cust_id |
++--------+------------+--------+---------+
+|      1 | 2024-11-02 | 675.30 |       1 |
++--------+------------+--------+---------+
+
+
+    mysql> insert into orders(date,amount,cust_id)
+    -> values (curdate(),1675.3,1);
+
+mysql> select * from orders;
++--------+------------+---------+---------+
+| ord_id | date       | amount  | cust_id |
++--------+------------+---------+---------+
+|      1 | 2024-11-02 |  675.30 |       1 |
+|      2 | 2024-11-02 | 1675.30 |       1 |
+|      3 | 2024-11-02 | 3564.00 |       1 |
+|      4 | 2024-11-02 | 3564.00 |       2 |
++--------+------------+---------+---------+
+
+
+__________________________________________________________________________________________________________________
+
+
+ON DELETE CASCADE 
+
+
+      mysql> delete from customers
+    -> where name='Shaikh';
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`stores`.`orders`, CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`cust_id`) REFERENCES `customers` (`cust_id`))
+mysql>
+
+     
+     - When im deleting any data from customers table then it is not successfully delete, instead it tells this table data is referenced in some other table can't able to delete this data
+
+     - If i want to delete  data from customers & also wants data its data from order table , we can use ON DELETE  CASCADE 
+
+
+
+
+mysql> create table orders(
+    -> ord_id int auto_increment primary key,
+    -> date DATE,
+    -> amount decimal(10,2),
+    -> cust_id int,
+    -> FOREIGN KEY(cust_id) REFERENCES customers(cust_id) ON DELETE CASCADE
+);
+
+
+
+
+mysql> select * from customers;            ( Before Delete )
++---------+-----------+------------------+
+| cust_id | name      | email            |
++---------+-----------+------------------+
+|       1 | Maroof    | Maroof@gmail.com |
+|       2 | Shaikh    | Shaikh@gmail.com |
+|       3 | Ahmed     | Ahmed@gmail.com  |
+|       4 | Mshaikh   | ms@gmail.com     |
+|       5 | Shashaikh | sha@gmail.com    |
++---------+-----------+------------------+
+
+
+
+mysql> delete from customers
+    -> where name='Shaikh';
+Query OK, 1 row affected (0.01 sec)
+
+
+mysql> select * from customers;            ( After Delete )
++---------+-----------+------------------+
+| cust_id | name      | email            |
++---------+-----------+------------------+
+|       1 | Maroof    | Maroof@gmail.com |
+|       3 | Ahmed     | Ahmed@gmail.com  |
+|       4 | Mshaikh   | ms@gmail.com     |
+|       5 | Shashaikh | sha@gmail.com    |
++---------+-----------+------------------+
+
+
+ 
+SUMMARY 
+    If u want to delete any customers data use ON DELETE CASCADE,then only it can delete else not able to delete
+
+    Note : Use ON DELETE CASCADE always we dont know when we have to delete any data from table , BCOZ ONCE U CREATED A TABLE U WILLN'T ABLE TO MODIFY IT CONSTRAINT EASILY.
+
+
+
+
+
+
+
+
+
+________________________________________________________________________________________________________________________________________________________
+
+
+
+
+    MANY TO MANY 
+
+
+
+      Example for this relationship  is Number of students selecting numbers of courses.
+
+      For connecting these tables in many to many relationship there is an concept called junction table or bridge table .
+   
+      Bridge table connects 2 table.
+
+
+    Example illustration.
+
+      Table Students  \
+         -id           \
+         -student_name  \ 
+                         \                           Table student_course
+                          \_ _ _ _ _ _ __ _ _ _ _ _ __ > - student_id
+                       _ _ _ _ _ _ __ _ _ _ _ _ __ _ _ > - course_id
+      Table Course    /
+         -id         /
+         -course_name
+         -fees
+
+
+
+
+mysql> create table courses(
+    -> id int auto_increment primary key,
+    -> course_name varchar(150),
+    -> fees int
+    -> );
+
+
+
+
+
+mysql> create table student_course(
+    -> student_id int,
+    -> course_id int,
+    -> FOREIGN KEY (student_id) REFERENCES students(id),
+    -> FOREIGN KEY (course_id)  REFERENCES courses(id)
+    -> );
+
+
+
+
+mysql> desc students;
++--------------+--------------+------+-----+---------+----------------+
+| Field        | Type         | Null | Key | Default | Extra          |
++--------------+--------------+------+-----+---------+----------------+
+| id           | int          | NO   | PRI | NULL    | auto_increment |
+| student_name | varchar(100) | YES  |     | NULL    |                |
++--------------+--------------+------+-----+---------+----------------+
+
+
+mysql> desc courses;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | int          | NO   | PRI | NULL    | auto_increment |
+| course_name | varchar(150) | YES  |     | NULL    |                |
+| fees        | int          | YES  |     | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+
+
+mysql> desc student_course;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| student_id | int  | YES  | MUL | NULL    |       |
+| course_id  | int  | YES  | MUL | NULL    |       |
++------------+------+------+-----+---------+-------+
+
+
+
+mysql> select * from students;
++----+--------------+
+| id | student_name |
++----+--------------+
+|  1 | Maroof       |
+|  2 | Shaikh       |
+|  3 | Ahmed        |
++----+--------------+
+
+mysql> select * from courses;
++-----+-------------+--------+
+| id  | course_name | fees   |
++-----+-------------+--------+
+| 101 | CS          | 100000 |
+| 102 | IT          |  95000 |
+| 103 | EXE         |  80000 |
+| 104 | AIML        |  90000 |
+| 105 | Civil       |  50000 |
++-----+-------------+--------+
+
+
+mysql> insert into student_course(student_id,course_id)
+    -> values (1,101),(1,102),(2,105),(1,105),(3,303),(2,104);
+
+mysql> select * from student_course;
+
++------------+-----------+
+| student_id | course_id |
++------------+-----------+
+|          1 |       101 |
+|          2 |       104 |
+|          1 |       104 |
+|          3 |       105 |
+|          3 |       101 |
++------------+-----------+
+
+
+
+ # This is how we can use joins in many to many 
+ 
+mysql> SELECT students.student_name, courses.course_name
+    -> FROM students
+    -> JOIN student_course ON student_course.student_id = students.id
+    -> JOIN courses ON student_course.course_id = courses.id;
+
+
++--------------+-------------+
+| student_name | course_name |
++--------------+-------------+
+| Maroof       | CS          |
+| Maroof       | AIML        |
+| Shaikh       | AIML        |
+| Ahmed        | Civil       |
+| Ahmed        | CS          |
++--------------+-------------+
+
+
+
+
+
+mysql> select course_name, count(student_name)
+    -> from students
+    -> JOIN
+    ->     student_course ON student_course.student_id=students.id
+    -> JOIN
+    ->     courses ON student_course.course_id=courses.id
+    -> GROUP BY course_name;;
++-------------+---------------------+
+| course_name | count(student_name) |
++-------------+---------------------+
+| CS          |                   2 |
+| AIML        |                   2 |
+| Civil       |                   1 |
++-------------+---------------------+
+
+
+
+mysql> select student_name, COUNT(course_name) from students
+    -> JOIN
+    ->     student_course ON student_course.student_id=students.id
+    -> JOIN
+    ->     courses ON student_course.course_id=courses.id
+    -> GROUP BY student_name;
++--------------+--------------------+
+| student_name | COUNT(course_name) |
++--------------+--------------------+
+| Maroof       |                  2 |
+| Shaikh       |                  1 |
+| Ahmed        |                  2 |
++--------------+--------------------+
+
+
+mysql> select student_name, SUM(fees) from students
+    -> JOIN
+    ->     student_course ON student_course.student_id=students.id
+    -> JOIN
+    ->     courses ON student_course.course_id=courses.id
+    -> GROUP BY student_name;
++--------------+-----------+
+| student_name | SUM(fees) |
++--------------+-----------+
+| Maroof       |    190000 |
+| Shaikh       |     90000 |
+| Ahmed        |    150000 |
++--------------+-----------+
+
+
+__________________________________________________________________________________
+
+
+EXAMPLE - 2
+
+
+
+    mysql> create table teacher_table(
+    -> tea_id int auto_increment primary key,
+    -> tea_name varchar(30)
+    -> );
+
+
+mysql> create table courses_table(
+    -> cour_id int primary key auto_increment,
+    -> cour_name varchar(50),
+    -> fees int
+    -> );
+
+
+mysql> create table teacher_course(
+    -> teacher_id int,
+    -> course_id int,
+    -> FOREIGN KEY (teacher_id) REFERENCES teacher_table(tea_id),
+    -> FOREIGN KEY (course_id)  REFERENCES courses_table(cour_id)
+    -> );
+
+
+
+
+  mysql> desc teacher_table;
++----------+-------------+------+-----+---------+----------------+
+| Field    | Type        | Null | Key | Default | Extra          |
++----------+-------------+------+-----+---------+----------------+
+| tea_id   | int         | NO   | PRI | NULL    | auto_increment |
+| tea_name | varchar(30) | YES  |     | NULL    |                |
++----------+-------------+------+-----+---------+----------------+
+2 rows in set (0.01 sec)
+
+mysql> desc courses_table;
++-----------+-------------+------+-----+---------+----------------+
+| Field     | Type        | Null | Key | Default | Extra          |
++-----------+-------------+------+-----+---------+----------------+
+| cour_id   | int         | NO   | PRI | NULL    | auto_increment |
+| cour_name | varchar(50) | YES  |     | NULL    |                |
+| fees      | int         | YES  |     | NULL    |                |
++-----------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> desc teacher_course;
++------------+------+------+-----+---------+-------+
+| Field      | Type | Null | Key | Default | Extra |
++------------+------+------+-----+---------+-------+
+| teacher_id | int  | YES  | MUL | NULL    |       |
+| course_id  | int  | YES  | MUL | NULL    |       |
++------------+------+------+-----+---------+-------+
+
+
+
+mysql> select * from teacher_table;
++--------+------------+
+| tea_id | tea_name   |
++--------+------------+
+|      1 | Ashfaq S   |
+|      2 | Zainab M   |
+|      3 | Shabina Sa |
+|      4 | Shabana S  |
+|      5 | Vikas B 	   |
+|      6 | Farida A   |
++--------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select * from courses_table;
++---------+---------------+--------+
+| cour_id | cour_name     | fees   |
++---------+---------------+--------+
+|     101 | AWS           | 120000 |
+|     102 | Data science  | 100000 |
+|     103 | Python        |  45000 |
+|     104 | Web Dev       |  60000 |
+|     105 | Blockchain    |  80000 |
+|     106 | Software Engg |  65000 |
+|     107 | Soft Testing  |  76000 |
++---------+---------------+--------+
+
+
+( HERE WE R ABLE TO ASSIGN EACH ID TO EACH COURSE COZ WE HAD REFERNCE THEM THROUGH teacher_id & course_id )
+
+mysql> insert into teacher_course(teacher_id, course_id)
+    -> values (2,101),(1,102),(3,107),(4,106),(5,105),(6,104),(2,103)
+    -> ;
+Query OK, 7 rows affected (0.02 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+
+mysql> select * from teacher_course;
++------------+-----------+
+| teacher_id | course_id |
++------------+-----------+
+|          2 |       101 |
+|          1 |       102 |
+|          3 |       107 |
+|          4 |       106 |
+|          5 |       105 |
+|          6 |       104 |
+|          2 |       103 |
++------------+-----------+
+
+
+
+
+mysql> SELECT tea_name, cour_name
+    -> FROM teacher_table
+    -> JOIN teacher_course ON teacher_table.tea_id = teacher_course.teacher_id
+    -> JOIN courses_table ON teacher_course.course_id = courses_table.cour_id;
+
+
++------------+---------------+
+| tea_name   | cour_name     |
++------------+---------------+
+| Ashfaq S   | Data science  |
+| Zainab M   | AWS           |
+| Zainab M   | Python        |
+| Shabina Sa | Soft Testing  |
+| Shabana S  | Software Engg |
+| Vikas B    | Blockchain    |
+| Farida A   | Web Dev       |
++------------+---------------+
+
+
+
+mysql> select tea_name as 'Faculties', cour_name as 'Courses' from teacher_table
+    -> JOIN teacher_course ON teacher_table.tea_id=teacher_course.teacher_id
+    -> JOIN courses_table  ON teacher_course.course_id=courses_table.cour_id;
+
+
++------------+---------------+
+| Faculties  | Courses       |
++------------+---------------+
+| Ashfaq S   | Data science  |
+| Zainab M   | AWS           |
+| Zainab M   | Python        |
+| Shabina Sa | Soft Testing  |
+| Shabana S  | Software Engg |
+| Vikas B    | Blockchain    |
+| Farida A   | Web Dev       |
++------------+---------------+
+
+
+
+mysql> select tea_name , count(cour_name) from teacher_table
+    -> JOIN
+    -> teacher_course ON teacher_course.teacher_id=teacher_table.tea_id
+    -> JOIN
+    -> courses_table ON courses_table.cour_id=teacher_course.course_id
+    -> group by tea_name;
+
++------------+------------------+
+| tea_name   | count(cour_name) |
++------------+------------------+
+| Ashfaq S   |                1 |
+| Zainab M   |                2 |
+| Shabina Sa |                1 |
+| Shabana S  |                1 |
+| Vikas B    |                1 |
+| Farida A   |                1 |
++------------+------------------+
+
+
+
+mysql> select tea_name ,  SUM(fees) as 'Total charges of each faculty' f
+rom teacher_table
+    -> JOIN
+    -> teacher_course ON teacher_course.teacher_id=teacher_table.tea_id
+    -> JOIN
+    -> courses_table ON courses_table.cour_id=teacher_course.course_id
+    ->
+    -> group by tea_name;
+
+
++------------+-------------------------------+
+| tea_name   | Total charges of each faculty |
++------------+-------------------------------+
+| Ashfaq S   |                        100000 |
+| Zainab M   |                        165000 |
+| Shabina Sa |                         76000 |
+| Shabana S  |                         65000 |
+| Vikas B    |                         80000 |
+| Farida A   |                         60000 |
++------------+-------------------------------+
+
+
+
+
+
+__________________________________________________________________________________
+
+ TO UNDERSTAND IT CLEARLY READ 
+
+
+
+ Basic Concept of JOIN:
+
+JOIN allows us to pull data from multiple tables.
+
+We specify the relationship between tables with an ON clause, which defines which columns in each table should match.
+
+
+Using Multiple JOINs:
+
+Each JOIN connects two tables. If you have three tables, you’ll need two JOIN clauses:
+First, join teacher_table and teacher_course on the tea_id column.
+Then, join teacher_course and courses_table on the cour_id column.
+
+Writing the Query:
+
+First JOIN: Start with teacher_table and teacher_course. Use ON to specify that teacher_table.tea_id matches teacher_course.teacher_id.
+
+Second JOIN: Then join courses_table by specifying that teacher_course.course_id matches courses_table.cour_id.
+
+
+Why the ON Clauses?
+
+ON teacher_table.tea_id = teacher_course.teacher_id: This tells SQL to find matching rows where tea_id in teacher_table is the same as teacher_id in teacher_course.
+
+ON teacher_course.course_id = courses_table.cour_id: This tells SQL to find matching rows where course_id in teacher_course is the same as cour_id in courses_table.

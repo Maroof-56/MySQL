@@ -1,0 +1,77 @@
+STORED ROUTINE
+
+   An sql statement or a set of sql statement that can be stored on database server which can be call no. of  times.
+
+
+    Types 
+
+       - Stored procedure
+       - User defined functions
+
+
+  STORED PROCEDURE 
+
+         These are routines that contains a series of sql statement & procedural logic.
+
+         Often used for performing action like data modification,transaction control & executing sequence of statement.
+
+
+         # Drop procedure if exits p_name;
+
+
+         #1.  Temporary changing Delimeter 
+             delimeter $$
+
+         #2. Creating procedure
+             
+           create procedure p_name()
+              begins
+                   select * from employess
+                   limit 10;
+              end$$
+
+         #3. Again set changing delimeter.
+
+         # ( The purpose of changing delimeter temporary cox at line limit 10 ; when it read the semicolon ; it will stop the process at that line but wee didn't want it to stop there so we temporarily change delimeter ; to $$ while creating procedure ).
+
+
+         # Within a team there will be a query that uses on daily purpose so for this we can make procedure to eaily it easily 
+
+
+
+
+   IN WORKBENCH      ( Not well understand this one )
+
+
+         DELIMITER $$
+
+          CREATE PROCEDURE emp_info()
+            BEGIN
+              SELECT * FROM employees order by salary ;
+            END $$
+
+            DELIMITER ;
+           ;
+
+    when u type in work bench & run it will show you the output,if got error check on left side stored_procedure under u will find name click on setting make changes & apply
+
+
+
+
+
+
+
+
+
+   USER DEFINED FUNCTION 
+
+      DELIMITER $$
+      CREATE FUNCTION emp_name()
+  
+        BEGINS
+  
+          ___
+
+        END$$
+
+      DELIMITER ;

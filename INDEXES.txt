@@ -1,0 +1,95 @@
+ INDEXES
+
+
+  Creating and using indexes in MySQL is a powerful way to optimize the performance of a database.
+
+
+  The basics idea for using indexing is lessen the time to execute query.
+
+  Indexing dene se MySQL direct wahi ja k find karega naki har jagah.
+
+  NOTE : using index it takes space of memory , coz it make its index using data
+
+  EXAMPLE UNDERSTANDING.
+
+  mysql> select * from employees limit  7;
++--------+------------+------------+-----------+--------+------------+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
++--------+------------+------------+-----------+--------+------------+
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
+|  10002 | 1964-06-02 | Bezalel    | Simmel    | F      | 1985-11-21 |
+|  10003 | 1959-12-03 | Parto      | Bamford   | M      | 1986-08-28 |
+|  10004 | 1954-05-01 | Chirstian  | Koblick   | M      | 1986-12-01 |
+|  10005 | 1955-01-21 | Kyoichi    | Maliniak  | M      | 1989-09-12 |
+|  10006 | 1953-04-20 | Anneke     | Preusig   | F      | 1989-06-02 |
+|  10007 | 1957-05-23 | Tzvetan    | Zielinski | F      | 1989-02-10 |
++--------+------------+------------+-----------+--------+------------+
+
+7 rows in set (0.01 sec)    ( The time taken is 0.01 )
+
+mysql> select COUNT(emp_no) from employees ;
++---------------+
+| COUNT(emp_no) |
++---------------+
+|        300024 |
++---------------+
+
+1 row in set (0.15 sec) 
+( It taken 0.15s to count lakhs of data only ,in real world billion or millions of data ava , if want to execute query it will take time so to reduce the time to execute query we can use indexing)
+
+
+
+
+ SYNTAX 
+
+   
+   HOW TO AD INDEX ?
+
+
+    - Create index i_name
+        ON employess(salary,emp_id);
+
+
+   HOW TO SEE INDEX 
+
+    - SHOW INDEX from
+        employees from emp_db;
+
+
+
+
+
+   EXAMPLE
+
+   mysql> select * from employees where first_name'Tzevan';
+
+    241 rows in set (0.29 sec)  ( It taken this much time to show all name of Tzevan)
+
+    SO I CREATED INDEX OF FIRST NAME OF TABLE TO LESSEN THE TIME
+
+
+    mysql> CREATE INDEX i_fname ON employees(first_name);
+    Query OK, 0 rows affected (2.54 sec)
+    Records: 0  Duplicates: 0  Warnings: 0
+
+
+    241 rows in set (0.01 sec)  ( After indexing that much time is lessen )
+
+
+mm
+ mysql> show indexes from employees;
++-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table     | Non_unique | Key_name | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| employees |          0 | PRIMARY  |            1 | emp_no      | A         |      291449 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
+| employees |          1 | i_fname  |            1 | first_name  | A         |        1220 |     NULL |   NULL |      | BTREE      |         |               | YES     | NULL       |
++-----------+------------+----------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+
+
+
+mysql> alter table employees
+    -> drop index i_fname;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql>

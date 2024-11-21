@@ -1,0 +1,22 @@
+TRIGGER FUNCTION 
+
+
+    USE to automate some task.
+    Ex : by misatake any salary set as negative it convert into 0 instead -ve sal
+
+
+    SYNTAX 
+
+
+    CREATE TRIGGER trigger_name
+    
+    BEFORE | AFTER event_type ON table_name
+
+    FOR EACH ROW
+
+    BEGIN
+
+       ----trigger body
+       ----sql statement to execute
+   
+    END;
